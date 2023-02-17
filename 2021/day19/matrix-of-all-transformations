@@ -1,0 +1,6 @@
+\begin{pmatrix}
+T_{11} & T_{12} & \hdots & T_{1N} \\
+T_{21} & T_{22} & \hdots & T_{2N} \\
+\vdots & \vdots & \ddots & \vdots \\
+T_{N1} & T_{N2} & \hdots & T_{NN}
+\end{pmatrix}
