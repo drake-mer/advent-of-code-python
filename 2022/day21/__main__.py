@@ -65,7 +65,6 @@ Let's call 'I' the number we know we are looking for.
 
 """
 import dataclasses
-import functools
 import re
 from typing import Callable, TypeAlias, Mapping
 
@@ -98,8 +97,18 @@ class MonkeyOperation:
 
 
 MonkeyReference: TypeAlias = Reference
+HumanReference: TypeAlias = Reference
+MonkeyAssembly: TypeAlias = Mapping[MonkeyReference | HumanReference, MonkeyOperation | Value]
 
-MonkeyAssembly: TypeAlias = Mapping[MonkeyReference, MonkeyOperation | Value]
+
+@dataclasses.dataclass
+class Equation:
+    value: Value
+    expression: MonkeyOperation
+
+
+class MissingHuman(Exception):
+    pass
 
 
 def yell(ref: MonkeyReference, assembly: MonkeyAssembly) -> Value:
@@ -108,8 +117,39 @@ def yell(ref: MonkeyReference, assembly: MonkeyAssembly) -> Value:
             return op
         case MonkeyOperation(_):
             return op.operation(yell(op.lhs, assembly), yell(op.rhs, assembly))
+        case None:
+            raise MissingHuman("Are you going to yell?")
         case _:
             raise ValueError("what to do with this?")
+
+
+def solve_equation(equation: Equation, assembly: MonkeyAssembly) -> Equation | Value:
+    op = equation.expression
+    if op is None:
+        return equation.value
+    try:
+        op_rhs: Value = yell(op.rhs, assembly)
+        op_lhs: MonkeyOperation = assembly[op.lhs]
+        match op.operation:
+            case _Operation.DIV:
+                return Equation(Value(op_rhs * equation.value), op_lhs)
+            case _Operation.SUB:
+                return Equation(Value(op_rhs + equation.value), op_lhs)
+        num, expression = op_rhs, op_lhs
+    except MissingHuman:
+        op_lhs: Value = yell(op.lhs, assembly)
+        op_rhs: MonkeyOperation = assembly[op.rhs]
+        match op.operation:
+            case _Operation.DIV:
+                return Equation(Value(op_lhs // equation.value), op_rhs)
+            case _Operation.SUB:
+                return Equation(Value(op_lhs - equation.value), op_rhs)
+        num, expression = op_lhs, op_rhs
+    match op.operation:
+        case _Operation.MUL:
+            return Equation(Value(equation.value // num), expression)
+        case _Operation.ADD:
+            return Equation(Value(equation.value - num), expression)
 
 
 def read_operation(source: str) -> _Operation:
@@ -152,4 +192,22 @@ def read_monkey_assembly() -> MonkeyAssembly:
     return dict(read_monkey(line) for line in open('input.txt'))
 
 
+def solve(reference: HumanReference, assembly: MonkeyAssembly):
+    assembly[reference] = None
+    trust_source = assembly[Reference('root')]
+    try:
+        number, rhs = yell(trust_source.lhs, assembly), assembly[trust_source.rhs]
+    except MissingHuman:
+        number, rhs = yell(trust_source.rhs, assembly), assembly[trust_source.lhs]
+    equation = Equation(number, rhs)
+
+    while True:
+        match (equation := solve_equation(equation, assembly)):
+            case Value(_):
+                return equation
+            case _:
+                continue
+
+
 print(yell(MonkeyReference('root'), read_monkey_assembly()))
+print(solve(HumanReference('humn'), read_monkey_assembly()))
