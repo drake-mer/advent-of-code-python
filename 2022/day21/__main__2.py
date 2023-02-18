@@ -36,33 +36,6 @@ At this point, we think that the parsing is correct and that the model is correc
 It remains some kind of ambiguity. We know that this problem is typical of lazy loading of values and that we can probably
 come with an elegant way to solve it. Will we manage to derive an elegant solution from this?
 
-HO NO! Domain Model changed! Instead of computing operations, we need to solve an equation! That's so painful! How
-can we carry over with this?
-
-Stick to your DDD approach dude! It will help you find clarity in this mess!
-
-OK!
-
-So now, we have a pretty clear overview of the domain. We basically have a tree of operation, but we need
-to invert the whole tree to find exactly what number put with the ref 'humn' So we will probably need to invert
-a large equation looking like
-
-1234 = (456 + (2 * (6 // (123 + (... ( 123 * humn))))))
-
-So we need a way to invert operation, that's a lot of thinking. HO NO \o/
-
-More domain model knowledge to invest, that's *DIFFICULT* and Math is *HARD*
-
-Let's try anyway
-
-Let's call 'S' the symbolic operation to carry
-
-Let's call 'N' the actual number we know in the OP
-
-Let's call 'I' the number we know we are looking for.
-
-
-
 """
 import dataclasses
 import functools
@@ -76,11 +49,11 @@ class Value(int):
     pass
 
 
+Operation: TypeAlias = Callable[[Value, Value], Value]
+
+
 class Reference(str):
     pass
-
-
-Operation: TypeAlias = Callable[[Value, Value], Value]
 
 
 class _Operation(Enum):
@@ -102,6 +75,23 @@ MonkeyReference: TypeAlias = Reference
 MonkeyAssembly: TypeAlias = Mapping[MonkeyReference, MonkeyOperation | Value]
 
 
+def cache_result(f):
+    """unnecessary cache for the yell function"""
+    cache_dict = {}
+
+    @functools.wraps(f)
+    def wrapper(*args):
+        a, *remaining = args
+        if a in cache_dict:
+            print("cache called")
+            return cache_dict[a]
+        cache_dict[a] = f(*args)
+        return cache_dict[a]
+
+    return wrapper
+
+
+# @cache_result
 def yell(ref: MonkeyReference, assembly: MonkeyAssembly) -> Value:
     match (op := assembly[ref]):
         case Value(_):
