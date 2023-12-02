@@ -21,11 +21,11 @@ class Solution:
 
     @abc.abstractmethod
     def solution1(self):
-        raise NotImplementedError()
+        pass
 
     @abc.abstractmethod
     def solution2(self):
-        raise NotImplementedError()
+        pass
 
     def parse(self):
         raise NotImplementedError()
