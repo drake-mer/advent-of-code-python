@@ -1,8 +1,5 @@
-
-
-
 def input_data():
-    with open('input.txt') as f:
+    with open("input.txt") as f:
         data = f.read()
     return data
 
@@ -21,15 +18,15 @@ def answer2():
         if sum(True for pos in (x, y) if password[pos - 1] == l) == 1:
             ans += 1
     return ans
-    
+
 
 def parse_data(data):
     output = []
     for line in data.splitlines():
         line = line.strip()
-        r, l, password = line.split(' ')
-        r = tuple(map(int, r.split('-')))
-        l = l.strip(':')
+        r, l, password = line.split(" ")
+        r = tuple(map(int, r.split("-")))
+        l = l.strip(":")
         output.append((r, l, password))
     return output
 
@@ -39,5 +36,5 @@ def is_valid(r, l, password):
     return x <= password.count(l) <= y
 
 
-print(answer()) 
+print(answer())
 print(answer2())

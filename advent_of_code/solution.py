@@ -11,17 +11,23 @@ class Solution:
 
     @cached_property
     def data(self):
-        with open(pathlib.Path(__file__).parent / f"year_{self.year}" / "data" / f"day{self.day:02d}.txt") as f:
+        with open(
+            pathlib.Path(__file__).parent
+            / f"year_{self.year}"
+            / "data"
+            / f"day{self.day:02d}.txt"
+        ) as f:
             data = f.read()
         return data
 
     @cached_property
     def lines(self):
         return [line.rstrip() for line in self.data.splitlines()]
+
     @cached_property
     def line(self):
         """Useful if the input contains a single line."""
-        line, = self.lines
+        (line,) = self.lines
         return line
 
     @abc.abstractmethod
@@ -39,4 +45,3 @@ class Solution:
     def parsed(self):
         """It is not mandatory to implement this function, but it helps for standardization"""
         return self.parse()
-

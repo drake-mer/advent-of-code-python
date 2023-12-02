@@ -1,21 +1,24 @@
 import itertools
 
+
 def test_simple_example():
     data = [
-        int(l.strip()) for l in """
+        int(l.strip())
+        for l in """
 1721
 979
 366
 299
 675
 1456
-""".splitlines() if l
+""".splitlines()
+        if l
     ]
     assert answer(data) == 514579
 
 
 def read_data():
-    with open('input.txt') as f:
+    with open("input.txt") as f:
         data = f.read()
 
     return [int(line.strip()) for line in data.splitlines() if line]
@@ -28,7 +31,7 @@ def answer(data):
                 continue
             if data[k] + data[l] == 2020:
                 answer = data[k] * data[l]
-                return answer 
+                return answer
 
 
 def answer2(data):
@@ -38,9 +41,6 @@ def answer2(data):
     for k, l, m in itertools.product(s1, s2, s3):
         if k + l + m == 2020:
             return k * l * m
-
-
-
 
 
 print(answer(read_data()))
