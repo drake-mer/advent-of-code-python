@@ -6,7 +6,6 @@ import os
 import pathlib
 import sys
 import urllib.request
-import urllib
 
 from .solution import Solution
 
@@ -46,17 +45,28 @@ def chdir(new_folder):
     os.chdir(current_folder)
 
 
-class YearPath(pathlib.Path):
+class YearFolder(pathlib.Path):
     def __new__(cls, y: int):
         return pathlib.Path( __file__).parent / f"year_{y}"
 
 
+class Day(str):
+    def __new__(cls, d: int):
+        return str(f"day{d:02}")
+
+
 class DayInput(str):
     def __new__(cls, d: int):
-        return str(f"day{d:02}.txt")
+        return str(Day(d) + ".txt")
+
+class DayModule(str):
+
+    def __new__(cls, d: int):
+        return str(Day(d) + ".py")
 
 
-def get_puzzle_input(year: int, day: int):
+
+def prepare_puzzle_data_and_layout(year: int, day: int):
     def get_token():
         env_file = pathlib.Path(os.getcwd()) / ".env"
 
@@ -76,10 +86,33 @@ def get_puzzle_input(year: int, day: int):
                 except ValueError:
                     return
 
-    if not (data_path := (YearPath(year) / "data")).exists():
+    if not (year_path := YearFolder(year)).exists():
+        print("year folder does not exist, creating it")
+        os.mkdir(year_path)
+
+    if not (year_path / "__init__.py").exists():
+        with open(year_path / "__init__.py", "w") as f:
+            f.write(f'"""AOC year={year}"""')
+    if not (year_path / DayModule(day)).exists():
+        with open(year_path / DayModule(day), "w") as f:
+            f.write(
+                f"""
+from advent_of_code.solution import Solution
+
+
+class {Day(day).title()}(Solution):
+    def solution1(self):
+        return "not implemented"
+
+    def solution2(self):
+        return "not implemented"
+        """
+            )
+
+    if not (data_path := (YearFolder(year) / "data")).exists():
         print("data folder does not exist, creating it")
         os.mkdir(data_path)
-    if (YearPath(year) / "data" / DayInput(day)).exists():
+    if (YearFolder(year) / "data" / DayInput(day)).exists():
         print("data already downloaded, skipping")
         return
     if not (session_token := get_token()):
@@ -100,45 +133,21 @@ def get_puzzle_input(year: int, day: int):
         return
     content = response.read()
     response.close()
-    with open(YearPath(year) / "data" / DayInput(day), "w") as f:
+    with open(YearFolder(year) / "data" / DayInput(day), "w") as f:
         f.write(content.decode())
         print("Successfully downloaded puzzle input, you can start answering...")
 
 
-def run_solution(year: int, day: int, exit=False):
+def run_solution(year: int, day: int):
     day_module_name = f"day{day:02d}"
     year_module_name: str = f"year_{year:04d}"
-    try:
-        module = importlib.import_module(
-            f"advent_of_code.{year_module_name}.{day_module_name}"
-        )
-    except ImportError as exc:
-        if exit:
-            print(exc)
-            sys.exit(1)
-        with open(
-            pathlib.Path(__file__).parent / year_module_name / f"{day_module_name}.py",
-            "w",
-        ) as f:
-            f.write(
-                f"""
-from advent_of_code.solution import Solution
-
-
-class {day_module_name.title()}(Solution):
-    def solution1(self):
-        raise NotImplementedError(\"please implement solution 1\")
-
-    def solution2(self):
-        raise NotImplementedError(\"please implement solution 2\")
-"""
-            )
-        run_solution(year, day, exit=True)
-
+    module = importlib.import_module(
+        f"advent_of_code.{year_module_name}.{day_module_name}"
+    )
     solution: Solution = getattr(module, day_module_name.title())(day=day, year=year)
     print("solution 1: ", solution.solution1())
     print("solution 2: ", solution.solution2())
 
 
-get_puzzle_input(args.year, args.day)
+prepare_puzzle_data_and_layout(args.year, args.day)
 run_solution(args.year, args.day)
