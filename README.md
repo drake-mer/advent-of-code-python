@@ -1,6 +1,6 @@
 # About
 
-A modest attempt at solving some of the advent of code problems.
+An attempt at solving some of the advent of code problems.
 
 Adding documentation, alternative approaches, solutions in different
 languages along the way.
