@@ -18,6 +18,11 @@ class Solution:
     @cached_property
     def lines(self):
         return [line.rstrip() for line in self.data.splitlines()]
+    @cached_property
+    def line(self):
+        """Useful if the input contains a single line."""
+        line, = self.lines
+        return line
 
     @abc.abstractmethod
     def solution1(self):

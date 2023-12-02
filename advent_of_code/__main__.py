@@ -32,22 +32,17 @@ parser.add_argument(
     help="The day of the puzzle",
     type=int,
 )
-
+parser.add_argument(
+    "--download",
+    help="Force downloading (aka refresh) the input",
+    action="store_true",
+)
 args = parser.parse_args()
-
-
-@contextlib.contextmanager
-def chdir(new_folder):
-    current_folder = os.getcwd()
-    print(f"moving from folder {current_folder} to folder {new_folder}")
-    os.chdir(new_folder)
-    yield
-    os.chdir(current_folder)
 
 
 class YearFolder(pathlib.Path):
     def __new__(cls, y: int):
-        return pathlib.Path( __file__).parent / f"year_{y}"
+        return pathlib.Path(__file__).parent / f"year_{y}"
 
 
 class Day(str):
@@ -59,14 +54,13 @@ class DayInput(str):
     def __new__(cls, d: int):
         return str(Day(d) + ".txt")
 
-class DayModule(str):
 
+class DayModule(str):
     def __new__(cls, d: int):
         return str(Day(d) + ".py")
 
 
-
-def prepare_puzzle_data_and_layout(year: int, day: int):
+def prepare_puzzle_data_and_layout(year: int, day: int, refresh_input=False):
     def get_token():
         env_file = pathlib.Path(os.getcwd()) / ".env"
 
@@ -106,17 +100,20 @@ class {Day(day).title()}(Solution):
 
     def solution2(self):
         return "not implemented"
-        """
+"""
             )
 
     if not (data_path := (YearFolder(year) / "data")).exists():
         print("data folder does not exist, creating it")
         os.mkdir(data_path)
-    if (YearFolder(year) / "data" / DayInput(day)).exists():
+    if (YearFolder(year) / "data" / DayInput(day)).exists() and not refresh_input:
         print("data already downloaded, skipping")
         return
     if not (session_token := get_token()):
-        print("WARNING: could not download puzzle data")
+        print("WARNING: could not download puzzle data, token is missing.")
+        print(
+            "Try putting AOC_TOKEN (session cookie value) into your environment or a '.env' file"
+        )
         return
     request = urllib.request.Request(
         method="GET",
@@ -130,7 +127,7 @@ class {Day(day).title()}(Solution):
         print(f"response from server has status code {response.code}")
         print(f"response content: {response.read()}")
         print(f"you might need to refresh your token")
-        return
+        sys.exit(1)
     content = response.read()
     response.close()
     with open(YearFolder(year) / "data" / DayInput(day), "w") as f:
@@ -145,9 +142,9 @@ def run_solution(year: int, day: int):
         f"advent_of_code.{year_module_name}.{day_module_name}"
     )
     solution: Solution = getattr(module, day_module_name.title())(day=day, year=year)
-    print("solution 1: ", solution.solution1())
-    print("solution 2: ", solution.solution2())
+    print("solution 1:", solution.solution1())
+    print("solution 2:", solution.solution2())
 
 
-prepare_puzzle_data_and_layout(args.year, args.day)
+prepare_puzzle_data_and_layout(args.year, args.day, args.download)
 run_solution(args.year, args.day)
