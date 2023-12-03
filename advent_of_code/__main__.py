@@ -107,6 +107,7 @@ def push_solution(year=None, day=None, level=None, solution=None):
     response = urllib.request.urlopen(request)
     print(f"solution for day {day=}, {year=} at {level=} submitted successfully with status HTTP {response.code=}")
     content_response = response.read().decode()
+    breakpoint()
     if "you have to wait after submitting an answer before trying again" in content_response:
         print("please wait before resubmitting")
     if "That's the right answer!" in content_response:
