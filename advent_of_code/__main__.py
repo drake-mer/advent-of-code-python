@@ -107,11 +107,15 @@ def push_solution(year=None, day=None, level=None, solution=None):
     response = urllib.request.urlopen(request)
     print(f"solution for day {day=}, {year=} at {level=} submitted successfully with status HTTP {response.code=}")
     content_response = response.read().decode()
-    breakpoint()
     if "you have to wait after submitting an answer before trying again" in content_response:
         print("please wait before resubmitting")
-    if "That's the right answer!" in content_response:
+    elif "That's the right answer!" in content_response:
         print(f"You seem to have found the correct answer to {level=}, {day=}, {year=}")
+    elif "That's not the right answer." in content_response:
+        print(f"you seem to have given an incorrect answer to {level=}, {day=}, {year=}")
+    else:
+        print("<================ Unhandled response ===============>")
+        print(content_response)
 
 
 def prepare_puzzle_data_and_layout(year: int, day: int, refresh_input=False):
