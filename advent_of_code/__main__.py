@@ -7,6 +7,7 @@ import pathlib
 import sys
 import urllib.request
 import webbrowser
+from typing import Literal
 
 from .solution import Solution
 
@@ -39,9 +40,12 @@ parser.add_argument(
     action="store_true",
 )
 parser.add_argument(
+    "-s",
     "--submit",
-    help="Submit your solution",
-    action="store_true"
+    help="Submit your solution to question 1 or 2",
+    default=0,
+    choices=(1, 2),
+    type=int,
 )
 args = parser.parse_args()
 
@@ -105,6 +109,8 @@ def push_solution(year=None, day=None, level=None, solution=None):
     content_response = response.read().decode()
     if "you have to wait after submitting an answer before trying again" in content_response:
         print("please wait before resubmitting")
+    if "That's the right answer!" in content_response:
+        print(f"You seem to have found the correct answer to {level=}, {day=}, {year=}")
 
 
 def prepare_puzzle_data_and_layout(year: int, day: int, refresh_input=False):
@@ -164,7 +170,7 @@ class {Day(day).title()}(Solution):
     webbrowser.open(f"https://adventofcode.com/{year}/day/{day}")
 
 
-def run_solution(year: int, day: int, submit: bool = False):
+def run_solution(year: int, day: int, submit: Literal[0, 1, 2] = 0):
     day_module_name = f"day{day:02d}"
     year_module_name: str = f"year_{year:04d}"
     module = importlib.import_module(
@@ -174,10 +180,10 @@ def run_solution(year: int, day: int, submit: bool = False):
     print("solution 1:", (s1 := solution.solution1()))
     print("solution 2:", (s2 := solution.solution2()))
     push = functools.partial(push_solution, day=day, year=year)
-    if submit and s1 and s1 != "not implemented":
-        push(level=1, solution=s1)
-    if submit and s2 and s2 != "not implemented":
-        push(level=2, solution=s2)
+    if submit == 1 and s1 and s1 != "not implemented":
+        push(level=submit, solution=s1)
+    elif submit == 2 and s2 and s2 != "not implemented":
+        push(level=submit, solution=s2)
 
 
 prepare_puzzle_data_and_layout(args.year, args.day, args.download)
