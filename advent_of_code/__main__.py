@@ -1,11 +1,12 @@
 import argparse
-import contextlib
 import datetime
+import functools
 import importlib
 import os
 import pathlib
 import sys
 import urllib.request
+import webbrowser
 
 from .solution import Solution
 
@@ -37,6 +38,11 @@ parser.add_argument(
     help="Force downloading (aka refresh) the input",
     action="store_true",
 )
+parser.add_argument(
+    "--submit",
+    help="Submit your solution",
+    action="store_true"
+)
 args = parser.parse_args()
 
 
@@ -60,26 +66,48 @@ class DayModule(str):
         return str(Day(d) + ".py")
 
 
+def get_token():
+    env_file = pathlib.Path(os.getcwd()) / ".env"
+
+    if token := os.getenv("AOC_TOKEN"):
+        return token
+    if env_file.exists():
+        for line in open(env_file):
+            line = line.strip()
+            if not line:
+                return
+            try:
+                key, value = line.split("=")
+                key = key.strip()
+                value = value.strip()
+                if key == "AOC_TOKEN":
+                    return value
+            except ValueError:
+                return
+
+
+def push_solution(year=None, day=None, level=None, solution=None):
+    if not (solution and year and day and level):
+        raise ValueError("you must specify valid input parameters")
+    if not (token := get_token()):
+        raise ValueError("token is not set")
+    request = urllib.request.Request(
+        method="POST",
+        headers={
+            "cookie": f"session={token}",
+            "content-type": "application/x-www-form-urlencoded",
+        },
+        data=f"level={level}&answer={solution}".encode(),
+        url=f"https://adventofcode.com/{year}/day/{day}/answer",
+    )
+    response = urllib.request.urlopen(request)
+    print(f"solution for day {day=}, {year=} at {level=} submitted successfully with status HTTP {response.code=}")
+    content_response = response.read().decode()
+    if "you have to wait after submitting an answer before trying again" in content_response:
+        print("please wait before resubmitting")
+
+
 def prepare_puzzle_data_and_layout(year: int, day: int, refresh_input=False):
-    def get_token():
-        env_file = pathlib.Path(os.getcwd()) / ".env"
-
-        if token := os.getenv("AOC_TOKEN"):
-            return token
-        if env_file.exists():
-            for line in open(env_file):
-                line = line.strip()
-                if not line:
-                    return
-                try:
-                    key, value = line.split("=")
-                    key = key.strip()
-                    value = value.strip()
-                    if key == "AOC_TOKEN":
-                        return value
-                except ValueError:
-                    return
-
     if not (year_path := YearFolder(year)).exists():
         print("year folder does not exist, creating it")
         os.mkdir(year_path)
@@ -132,19 +160,25 @@ class {Day(day).title()}(Solution):
     response.close()
     with open(YearFolder(year) / "data" / DayInput(day), "w") as f:
         f.write(content.decode())
-        print("Successfully downloaded puzzle input, you can start answering...")
+        print("Successfully downloaded puzzle input, you can start solving the puzzle...")
+    webbrowser.open(f"https://adventofcode.com/{year}/day/{day}")
 
 
-def run_solution(year: int, day: int):
+def run_solution(year: int, day: int, submit: bool = False):
     day_module_name = f"day{day:02d}"
     year_module_name: str = f"year_{year:04d}"
     module = importlib.import_module(
         f"advent_of_code.{year_module_name}.{day_module_name}"
     )
     solution: Solution = getattr(module, day_module_name.title())(day=day, year=year)
-    print("solution 1:", solution.solution1())
-    print("solution 2:", solution.solution2())
+    print("solution 1:", (s1 := solution.solution1()))
+    print("solution 2:", (s2 := solution.solution2()))
+    push = functools.partial(push_solution, day=day, year=year)
+    if submit and s1 and s1 != "not implemented":
+        push(level=1, solution=s1)
+    if submit and s2 and s2 != "not implemented":
+        push(level=2, solution=s2)
 
 
 prepare_puzzle_data_and_layout(args.year, args.day, args.download)
-run_solution(args.year, args.day)
+run_solution(args.year, args.day, args.submit)
