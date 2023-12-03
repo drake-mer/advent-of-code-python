@@ -10,27 +10,27 @@ class Score(int):
 
 
 class Choice(str, Enum):
-    rock = 'rock'
-    paper = 'paper'
-    scissors = 'scissors'
+    rock = "rock"
+    paper = "paper"
+    scissors = "scissors"
 
 
 class Issue(str, Enum):
-    lose = 'X'
-    draw = 'Y'
-    win = 'Z'
+    lose = "X"
+    draw = "Y"
+    win = "Z"
 
 
 class P1:
-    A = 'rock'
-    B = 'paper'
-    C = 'scissors'
+    A = "rock"
+    B = "paper"
+    C = "scissors"
 
 
 class P2:
-    X = 'rock'
-    Y = 'paper'
-    Z = 'scissors'
+    X = "rock"
+    Y = "paper"
+    Z = "scissors"
 
 
 def intrinsic_score(c: Choice) -> Score:
@@ -93,7 +93,9 @@ def play2_from_issue(p1: Choice, p2: Issue) -> Choice:
             return p1
 
 
-def score1(p1: Literal['A', 'B', 'C'], p2: Literal['X', 'Y', 'Z']) -> Tuple[Score, Score]:
+def score1(
+    p1: Literal["A", "B", "C"], p2: Literal["X", "Y", "Z"]
+) -> Tuple[Score, Score]:
     p1 = Choice(getattr(P1, p1))
     p2 = Choice(getattr(P2, p2))
     a, b = intrinsic_score(p1), intrinsic_score(p2)
@@ -101,9 +103,15 @@ def score1(p1: Literal['A', 'B', 'C'], p2: Literal['X', 'Y', 'Z']) -> Tuple[Scor
     return a + c, b + d
 
 
-def score2(p1: Literal['A', 'B', 'C'], p2: Literal['X', 'Y', 'Z']) -> Tuple[Score, Score]:
-    a, b = intrinsic_score(Choice(getattr(P1, p1))), intrinsic_score(play2_from_issue(Choice(getattr(P1, p1)), Issue(p2)))
-    c, d = match_score(Choice(getattr(P1, p1)), play2_from_issue(Choice(getattr(P1, p1)), Issue(p2)))
+def score2(
+    p1: Literal["A", "B", "C"], p2: Literal["X", "Y", "Z"]
+) -> Tuple[Score, Score]:
+    a, b = intrinsic_score(Choice(getattr(P1, p1))), intrinsic_score(
+        play2_from_issue(Choice(getattr(P1, p1)), Issue(p2))
+    )
+    c, d = match_score(
+        Choice(getattr(P1, p1)), play2_from_issue(Choice(getattr(P1, p1)), Issue(p2))
+    )
     return a + c, b + d
 
 
@@ -119,5 +127,5 @@ def day_1_second_puzzle(payload):
     return sum([s2 for (s1, s2) in map(lambda foo: score2(*foo), munch_data(payload))])
 
 
-print(day_1_first_puzzle(open(basedir / 'input.txt').read()))
-print(day_1_second_puzzle(open(basedir / 'input.txt').read()))
+print(day_1_first_puzzle(open(basedir / "input.txt").read()))
+print(day_1_second_puzzle(open(basedir / "input.txt").read()))

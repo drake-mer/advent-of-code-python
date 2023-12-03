@@ -19,7 +19,7 @@ def google(*args, **kwargs):
     5. Do a get https://adventofcode.com/2021/auth/login with session cookie
     6. Get a redirect on https://adventofcode.com/2021
     """
-    
+
     raise NotImplementedError()
 
 
@@ -28,18 +28,21 @@ def github(*args, **kwargs):
     1. Make a GET HTTP request to https://adventofcode.com/auth/github
     2. Get redirected to
        https://github.com/login/oauth/authorize?client_id=7bb0a7ec13388aa67963&duration=temporary&redirect_uri=https://adventofcode.com/auth/github/callback&response_type=code&scope=&state=x
-    3. Get redirected to 
+    3. Get redirected to
        https://adventofcode.com/auth/github/callback?code=d416bc58496b1cef6f9b&state=x
        -> answer set a `session` cookie
     4. Get redirected to
        https://adventofcode.com/2021/auth/login
     5. Get redirected to /2021
     """
-    response_one = requests.get("https://adventofcode.com/auth/github", allow_redirects=False)
+    response_one = requests.get(
+        "https://adventofcode.com/auth/github", allow_redirects=False
+    )
     response_two = requests.get(response_one.headers["location"], allow_redirects=False)
-    response_three = requests.get(response_two.headers['location'], allow_redirects=False)
+    response_three = requests.get(
+        response_two.headers["location"], allow_redirects=False
+    )
     raise NotImplementedError()
-
 
 
 def get_session():
@@ -47,8 +50,7 @@ def get_session():
 
 
 def get_problem(year, day):
-    page = requests.get(f"https://adventofcode.com/{year}/day/{day}", cookies={'session': get_session()}).content
+    page = requests.get(
+        f"https://adventofcode.com/{year}/day/{day}", cookies={"session": get_session()}
+    ).content
     return page
-
-
-

@@ -7,10 +7,10 @@ basedir = pathlib.Path(__file__).parent
 
 
 class Direction(str, Enum):
-    UP = 'U'
-    DOWN = 'D'
-    LEFT = 'L'
-    RIGHT = 'R'
+    UP = "U"
+    DOWN = "D"
+    LEFT = "L"
+    RIGHT = "R"
 
 
 @dataclasses.dataclass(frozen=True)
@@ -67,13 +67,15 @@ class Rope(list[Coordinate]):
     def move_head(self, step: Coordinate):
         self.head = self.head + step
         for k in range(1, 10):
-            self[k] = tail_next_pos(self[k-1], self[k])
+            self[k] = tail_next_pos(self[k - 1], self[k])
 
 
 def box(move: Coordinate):
     """Will constrain a move in a 3x3 square."""
+
     def box_(value: int):
         return -1 if value < -1 else 1 if value > 1 else value
+
     return Coordinate(box_(move.x), box_(move.y))
 
 
@@ -117,5 +119,5 @@ def day_1_second_puzzle(payload):
     return len(visited)
 
 
-print(day_1_first_puzzle(open(basedir / 'input.txt').read()))
-print(day_1_second_puzzle(open(basedir / 'input.txt').read()))
+print(day_1_first_puzzle(open(basedir / "input.txt").read()))
+print(day_1_second_puzzle(open(basedir / "input.txt").read()))

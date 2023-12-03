@@ -43,11 +43,13 @@ class Instruction:
 def munch_data(payload: str) -> list[Instruction | Folder | File]:
     all_lines = []
     for line in payload.splitlines(keepends=False):
-        if line.startswith('$ '):
+        if line.startswith("$ "):
             line = line.removeprefix("$ ")
-            cmd, *args = line.split(' ')
-            all_lines.append(Instruction(instruction=Command(cmd), arguments=list(args) or None))
-        elif line.startswith('dir '):
+            cmd, *args = line.split(" ")
+            all_lines.append(
+                Instruction(instruction=Command(cmd), arguments=list(args) or None)
+            )
+        elif line.startswith("dir "):
             all_lines.append(Folder(line.removeprefix("dir ")))
         else:
             size, name = line.split()
@@ -67,7 +69,7 @@ def all_folders(folder: Folder, acc: List[Folder] = None) -> List[Folder]:
 
 def tree(data: list[Instruction | Folder | File]):
     assert data[0] == Instruction(Command("cd"), ["/"])
-    root = Folder('/')
+    root = Folder("/")
     current: Folder = root
     for d in data[1:]:
         match d:
@@ -82,14 +84,16 @@ def tree(data: list[Instruction | Folder | File]):
                     case Command.cd:
                         directory = Folder(*args)
                         match directory:
-                            case Folder('..'):
+                            case Folder(".."):
                                 if current.parent is None:
                                     raise ValueError
                                 current = current.parent
-                            case Folder('/'):
+                            case Folder("/"):
                                 current = root
                             case Folder(_):
-                                if not (subfolder := current.get_folder(directory.name)):
+                                if not (
+                                    subfolder := current.get_folder(directory.name)
+                                ):
                                     raise ValueError
                                 current = subfolder
     return root
@@ -111,5 +115,5 @@ def day_1_second_puzzle(payload):
     raise
 
 
-print(day_1_first_puzzle(open(basedir / 'input.txt').read()))
-print(day_1_second_puzzle(open(basedir / 'input.txt').read()))
+print(day_1_first_puzzle(open(basedir / "input.txt").read()))
+print(day_1_second_puzzle(open(basedir / "input.txt").read()))

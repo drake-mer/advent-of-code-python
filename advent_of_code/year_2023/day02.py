@@ -20,6 +20,7 @@ class CubeSample:
     def power(self):
         return self.blue * self.green * self.red
 
+
 @dataclass
 class Game:
     id: int
@@ -47,12 +48,17 @@ class Game:
             min_green = max(sample.green, min_green)
         return CubeSample(blue=min_blue, red=min_red, green=min_green)
 
+
 class Day02(Solution):
     def parse(self):
         return [Game.parse(line) for line in self.lines]
 
     def solution1(self):
-        return sum(g.id for g in self.parsed if g.is_possible(max_red=12, max_green=13, max_blue=14))
+        return sum(
+            g.id
+            for g in self.parsed
+            if g.is_possible(max_red=12, max_green=13, max_blue=14)
+        )
 
     def solution2(self):
         return sum(g.minimum_sample.power for g in self.parsed)

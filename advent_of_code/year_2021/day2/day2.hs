@@ -31,7 +31,7 @@ applyMove' (Down z) (RealPosition d h a) = RealPosition d h (a + z)
 applyMove' (Forward x) (RealPosition d h a) = RealPosition (d + (x * a)) (h + x) a
 
 
-testData :: [Move]
+testData :: [Move]
 testData = [(Forward 5), (Down 5), (Forward 8), (Up 3), (Down 8), (Forward 2)]
 {-
 0 5 0

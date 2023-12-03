@@ -7,8 +7,8 @@ basedir = pathlib.Path(__file__).parent
 
 
 class OpCode(str, Enum):
-    noop = 'noop'
-    addx = 'addx'
+    noop = "noop"
+    addx = "addx"
 
 
 @dataclasses.dataclass(frozen=True)
@@ -42,7 +42,7 @@ class Screen(list[str]):
     def __new__(cls, val: Iterable):
         output = list()
         for k in range(6):
-            output.append("".join(val[k * 40:40 + k * 40]))
+            output.append("".join(val[k * 40 : 40 + k * 40]))
         return output
 
 
@@ -82,12 +82,16 @@ def day_1_second_puzzle(payload):
     return "\n".join(
         Screen(
             [
-                '#' if (pixel % 40) in (state.register - 1, state.register, state.register + 1) else '.'
-                for pixel, state in enumerate(all_cycles(State(), munch_data(payload))) if pixel < 240
+                "#"
+                if (pixel % 40)
+                in (state.register - 1, state.register, state.register + 1)
+                else "."
+                for pixel, state in enumerate(all_cycles(State(), munch_data(payload)))
+                if pixel < 240
             ]
         )
     )
 
 
-print(day_1_first_puzzle(open(basedir / 'input.txt').read()))
-print(day_1_second_puzzle(open(basedir / 'input.txt').read()))
+print(day_1_first_puzzle(open(basedir / "input.txt").read()))
+print(day_1_second_puzzle(open(basedir / "input.txt").read()))

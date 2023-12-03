@@ -7,12 +7,12 @@ basedir = pathlib.Path(__file__).parent
 
 
 class MapValue(str, Enum):
-    SAND = 'o'
-    ROCK = '#'
-    AIR = '.'
+    SAND = "o"
+    ROCK = "#"
+    AIR = "."
 
 
-Coordinate = namedtuple('Coordinate', 'x y')
+Coordinate = namedtuple("Coordinate", "x y")
 
 
 class Map(dict[Coordinate, MapValue]):
@@ -26,11 +26,11 @@ class Map(dict[Coordinate, MapValue]):
         max_y = lowest_rock(self).y + 2
         max_x = max(c.x for c in self) + 2
         min_x = min(c.x for c in self) - 2
-        output = [['.' for x in range(min_x, max_x + 1)] for y in range(0, max_y + 1)]
+        output = [["." for x in range(min_x, max_x + 1)] for y in range(0, max_y + 1)]
         for pos, item in self.items():
             x, y = pos
             output[y][x - min_x] = item.value
-        return "\n".join(''.join(row) for row in output)
+        return "\n".join("".join(row) for row in output)
 
 
 class BlockedLocation(Exception):
@@ -61,14 +61,14 @@ def crange(a: Coordinate, b: Coordinate) -> Iterable[Coordinate]:
 
 
 def tries(a: Coordinate) -> Iterable[Coordinate]:
-    for (dx, dy) in [(0, 1), (-1, 1), (1, 1)]:
+    for dx, dy in [(0, 1), (-1, 1), (1, 1)]:
         yield Coordinate(a.x + dx, a.y + dy)
 
 
 def munch_data(payload: str) -> Map:
     big_map = Map()
     for pos, payload in enumerate(payload.splitlines(keepends=False)):
-        rocks = [Coordinate(*map(int, x.split(','))) for x in payload.split(' -> ')]
+        rocks = [Coordinate(*map(int, x.split(","))) for x in payload.split(" -> ")]
         for start, end in zip(rocks, rocks[1:]):
             for position in crange(start, end):
                 if position in big_map:
@@ -139,5 +139,5 @@ def day_1_second_puzzle(payload):
             return total_sand
 
 
-print(day_1_first_puzzle(open(basedir / 'input.txt').read()))
-print(day_1_second_puzzle(open(basedir / 'input.txt').read()))
+print(day_1_first_puzzle(open(basedir / "input.txt").read()))
+print(day_1_second_puzzle(open(basedir / "input.txt").read()))

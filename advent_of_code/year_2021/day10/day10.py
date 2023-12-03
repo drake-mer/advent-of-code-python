@@ -61,6 +61,7 @@ def missing_chars(line, store=None):
         missing_chars.append(matching[c])
     return missing_chars
 
+
 def score_missing_chars(missing):
     initial_score = 0
     for char in missing:
@@ -69,8 +70,9 @@ def score_missing_chars(missing):
         initial_score += s
     return initial_score
 
+
 store = []
 new_data = [line for line in data if is_valid(line, store)]
 print(sum(scoring[c] for c in store))
 autocomplete_scores = [score_missing_chars(missing_chars(line)) for line in new_data]
-print(sorted(autocomplete_scores)[len(autocomplete_scores)//2])
+print(sorted(autocomplete_scores)[len(autocomplete_scores) // 2])

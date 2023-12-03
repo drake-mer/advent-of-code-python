@@ -1,11 +1,19 @@
 from collections import Counter
 from pprint import pprint
-fname = 'test.txt'
-fname = 'input.txt'
+
+fname = "test.txt"
+fname = "input.txt"
 
 part1, part2 = open(fname).read().split("\n\n")
 polymer = part1
-sequence = dict([(pair, element) for (pair, element) in map(lambda l: l.strip().split(' -> '), part2.splitlines())])
+sequence = dict(
+    [
+        (pair, element)
+        for (pair, element) in map(
+            lambda l: l.strip().split(" -> "), part2.splitlines()
+        )
+    ]
+)
 pprint(sequence)
 
 print("Number of possible pairs", len(sequence))
@@ -13,11 +21,14 @@ print("Number of tokens", len(all_tokens))
 print(polymer)
 
 
-pair_mapping = {pair: (pair[0] + elem, elem + pair[1]) for pair, elem in sequence.items()}
+pair_mapping = {
+    pair: (pair[0] + elem, elem + pair[1]) for pair, elem in sequence.items()
+}
 
 
 def make_pairs(sequence: str):
     return [a + b for a, b in zip(sequence, sequence[1:])]
+
 
 def answer(counter: Counter):
     sorted_elems = counter.most_common()
@@ -40,5 +51,6 @@ def solve(initial_sequence, iterate=10):
         pair_counter = new_pair_counter
         answer(element_counter)
     return element_counter
+
 
 solve(polymer, 40)

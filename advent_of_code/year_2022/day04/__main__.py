@@ -1,4 +1,5 @@
 import pathlib
+
 basedir = pathlib.Path(__file__).parent
 
 
@@ -9,9 +10,9 @@ class Interval(tuple):
 def munch_data(payload: str) -> list[tuple[Interval, Interval]]:
     output = []
     for line in payload.splitlines(keepends=False):
-        i1, i2 = line.split(',')
-        a = tuple(map(int, i1.split('-')))
-        b = tuple(map(int, i2.split('-')))
+        i1, i2 = line.split(",")
+        a = tuple(map(int, i1.split("-")))
+        b = tuple(map(int, i2.split("-")))
         output.append((Interval(a), Interval(b)))
     return output
 
@@ -48,5 +49,5 @@ def day_1_second_puzzle(payload):
     return sum([1 for i1, i2 in munch_data(payload) if simple_overlap(i1, i2)])
 
 
-print(day_1_first_puzzle(open(basedir / 'input.txt').read()))
-print(day_1_second_puzzle(open(basedir / 'input.txt').read()))
+print(day_1_first_puzzle(open(basedir / "input.txt").read()))
+print(day_1_second_puzzle(open(basedir / "input.txt").read()))

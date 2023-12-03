@@ -20,12 +20,14 @@ input_data = """6,10
 fold along y=7
 fold along x=5"""
 
-input_data = open('input').read()
+input_data = open("input").read()
 
 
 def get_input(data: str):
     part_one, part_two = data.split("\n\n")
-    part_one = set(tuple(map(int, line.strip().split(','))) for line in part_one.splitlines())
+    part_one = set(
+        tuple(map(int, line.strip().split(","))) for line in part_one.splitlines()
+    )
     return part_one, list(l.strip().split()[-1] for l in part_two.splitlines())
 
 
@@ -36,33 +38,36 @@ max_y = max(y for (_, y) in p1)
 
 print(max_x, max_y)
 
-data = [['.' if (x, y) not in p1 else '#' for x in range(max_x+1)] for y in range(max_y+1)]
+data = [
+    ["." if (x, y) not in p1 else "#" for x in range(max_x + 1)]
+    for y in range(max_y + 1)
+]
 
 
 def fold_along_x(data, offset):
-    folded_data = [row[offset + 1:] for row in data]
+    folded_data = [row[offset + 1 :] for row in data]
     existing_part = [row[:offset] for row in data]
     for y, (folded_row, row) in enumerate(zip(folded_data, existing_part)):
         for x, folded_dot in enumerate(folded_row[:], 1):
-            if folded_dot == '#':
-                existing_part[y][offset - x] = '#'
+            if folded_dot == "#":
+                existing_part[y][offset - x] = "#"
     return existing_part
 
 
 def fold_along_y(data, offset):
-    folded_data = data[offset + 1:]
+    folded_data = data[offset + 1 :]
     part = data[:offset]
     for y, folded_row in enumerate(folded_data, 1):
         for x, folded_dot in enumerate(folded_row):
-            if folded_dot == '#':
-                part[offset - y][x] = '#'
+            if folded_dot == "#":
+                part[offset - y][x] = "#"
     return part
 
 
 def count_dots(data):
     output = 0
     for row in data:
-        output += row.count('#')
+        output += row.count("#")
     return output
 
 
@@ -70,15 +75,14 @@ def print_mat(data):
     print("\n".join("".join(row) for row in data))
 
 
-apply = {'y': fold_along_y, 'x': fold_along_x}
+apply = {"y": fold_along_y, "x": fold_along_x}
 
 for instruction in p2:
     print_mat(data)
     print("dots: ", count_dots(data))
     print()
-    axis, offset = instruction.split('=')
+    axis, offset = instruction.split("=")
     data = apply[axis](data, int(offset))
 
 print_mat(data)
 print("dots: ", count_dots(data))
-

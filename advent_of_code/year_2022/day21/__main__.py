@@ -98,7 +98,9 @@ class MonkeyOperation:
 
 MonkeyReference: TypeAlias = Reference
 HumanReference: TypeAlias = Reference
-MonkeyAssembly: TypeAlias = Mapping[MonkeyReference | HumanReference, MonkeyOperation | Value]
+MonkeyAssembly: TypeAlias = Mapping[
+    MonkeyReference | HumanReference, MonkeyOperation | Value
+]
 
 
 @dataclasses.dataclass
@@ -154,13 +156,13 @@ def solve_equation(equation: Equation, assembly: MonkeyAssembly) -> Equation | V
 
 def read_operation(source: str) -> _Operation:
     match source:
-        case '+':
+        case "+":
             return _Operation.ADD
-        case '-':
+        case "-":
             return _Operation.SUB
-        case '*':
+        case "*":
             return _Operation.MUL
-        case '/':
+        case "/":
             return _Operation.DIV
 
 
@@ -177,24 +179,26 @@ def read_monkey(source: str) -> tuple[MonkeyReference, MonkeyOperation | Value]:
         monkey_ref, lhs_value, operation, rhs_value = match.groups()
         return (
             Reference(monkey_ref),
-            MonkeyOperation(read_operation(operation), read_monkey_value(lhs_value), read_monkey_value(rhs_value))
+            MonkeyOperation(
+                read_operation(operation),
+                read_monkey_value(lhs_value),
+                read_monkey_value(rhs_value),
+            ),
         )
     elif match := val.match(source):
         monkey_ref, value = match.groups()
-        return (
-            Reference(monkey_ref), Value(value)
-        )
+        return (Reference(monkey_ref), Value(value))
     else:
         raise ValueError("could not tell what this line is about")
 
 
 def read_monkey_assembly() -> MonkeyAssembly:
-    return dict(read_monkey(line) for line in open('input.txt'))
+    return dict(read_monkey(line) for line in open("input.txt"))
 
 
 def solve(reference: HumanReference, assembly: MonkeyAssembly):
     assembly[reference] = None
-    trust_source = assembly[Reference('root')]
+    trust_source = assembly[Reference("root")]
     try:
         number, rhs = yell(trust_source.lhs, assembly), assembly[trust_source.rhs]
     except MissingHuman:
@@ -209,5 +213,5 @@ def solve(reference: HumanReference, assembly: MonkeyAssembly):
                 continue
 
 
-print(yell(MonkeyReference('root'), read_monkey_assembly()))
-print(solve(HumanReference('humn'), read_monkey_assembly()))
+print(yell(MonkeyReference("root"), read_monkey_assembly()))
+print(solve(HumanReference("humn"), read_monkey_assembly()))

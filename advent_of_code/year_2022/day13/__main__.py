@@ -39,14 +39,16 @@ def munch_data(payload: str) -> list[tuple[list, list]]:
     for pos, payload in enumerate(payload.split("\n\n")):
         l1, l2 = payload.splitlines(keepends=False)
         ll1, ll2 = eval(l1), eval(l2)
-        assert repr(ll1).replace(' ', '') == l1
-        assert repr(ll2).replace(' ', '') == l2
+        assert repr(ll1).replace(" ", "") == l1
+        assert repr(ll2).replace(" ", "") == l2
         all_data.append((ll1, ll2))
     return all_data
 
 
 def day_1_first_puzzle(payload):
-    return sum(k for k, (a, b) in enumerate(munch_data(payload), 1) if compare(a, b) == LT)
+    return sum(
+        k for k, (a, b) in enumerate(munch_data(payload), 1) if compare(a, b) == LT
+    )
 
 
 def day_1_second_puzzle(payload):
@@ -58,5 +60,5 @@ def day_1_second_puzzle(payload):
     return (d.index([[6]]) + 1) * (d.index([[2]]) + 1)
 
 
-print(day_1_first_puzzle(open(basedir / 'input.txt').read()))
-print(day_1_second_puzzle(open(basedir / 'input.txt').read()))
+print(day_1_first_puzzle(open(basedir / "input.txt").read()))
+print(day_1_second_puzzle(open(basedir / "input.txt").read()))

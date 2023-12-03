@@ -21,20 +21,19 @@ def munch_data(payload: str) -> tuple[Stacks, list[Move]]:
     for pos, l in enumerate(all_lines):
         if not l:
             break
-    stacks = parse_stacks(all_lines[:pos - 1])
-    moves = list(map(parse_move, [l for l in all_lines[pos+1:] if l]))
+    stacks = parse_stacks(all_lines[: pos - 1])
+    moves = list(map(parse_move, [l for l in all_lines[pos + 1 :] if l]))
     return {k: s for k, s in enumerate(stacks, 1)}, moves
 
 
 def parse_stacks(stacks):
-
     def split_row(row):
         output = []
         for k in range(100):
-            elem = row[k*4:k*4+4]
+            elem = row[k * 4 : k * 4 + 4]
             if not elem:
                 break
-            elem = elem.strip(' []')
+            elem = elem.strip(" []")
             output.append(elem)
         return output
 
@@ -61,8 +60,8 @@ def apply_move(move: Move, stacks: Stacks):
 
 
 def apply_move2(move: Move, stacks: Stacks):
-    moved_stack = stacks[move.source][-move.quantity:]
-    new_stack = stacks[move.source][:-move.quantity]
+    moved_stack = stacks[move.source][-move.quantity :]
+    new_stack = stacks[move.source][: -move.quantity]
     stacks[move.source] = new_stack
     stacks[move.destination].extend(moved_stack)
 
@@ -81,5 +80,5 @@ def day_1_second_puzzle(payload):
     print(*(stacks[k][-1] for k in range(1, 10)), sep="")
 
 
-print(day_1_first_puzzle(open(basedir / 'input.txt').read()))
-print(day_1_second_puzzle(open(basedir / 'input.txt').read()))
+print(day_1_first_puzzle(open(basedir / "input.txt").read()))
+print(day_1_second_puzzle(open(basedir / "input.txt").read()))

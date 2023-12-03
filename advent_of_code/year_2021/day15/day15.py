@@ -4,7 +4,8 @@ from pprint import pprint
 import sys
 import heapq
 
-fname = 'input.txt'
+fname = "input.txt"
+
 
 class Matrix(list):
     @cached_property
@@ -14,7 +15,7 @@ class Matrix(list):
     @cached_property
     def MAX_Y(self):
         return len(self) - 1
-        
+
     def __call__(self, x, y):
         return self[y][x]
 
@@ -23,6 +24,7 @@ class Matrix(list):
             if u < 0 or v < 0 or u > self.MAX_Y or v > self.MAX_X:
                 continue
             yield (v, u)
+
 
 mat = Matrix()
 
@@ -43,9 +45,10 @@ def new_mat(matt):
             y_inc = k // (matt.MAX_Y + 1)
             new_val = matt[y_o][x_o] + x_inc + y_inc
             n_mat[k][l] = (new_val % 9) if new_val != 9 else 9
-            
+
     print(len(n_mat))
     return Matrix(n_mat)
+
 
 ## Djikstra
 def visit_node(start, arrival, matrix, visited_nodes):
@@ -58,6 +61,7 @@ def visit_node(start, arrival, matrix, visited_nodes):
         return
     for neigh in sorted(matrix.neighbours(*arrival), key=lambda foo: matrix(*foo)):
         visit_node(arrival, neigh, matrix, visited_nodes)
+
 
 ## Djikstra
 def solve(input_mat):
@@ -81,9 +85,10 @@ def reconstruct(trace, node):
         total_path.append(node)
     return total_path
 
+
 def astar(input_mat):
     source_mat = Matrix(row[:] for row in input_mat)
-    current = (0,0)
+    current = (0, 0)
     to_visit = {current: 0}
     visited = {current: 0}
     trace = {}
@@ -91,7 +96,10 @@ def astar(input_mat):
         current = min(((p, k) for (p, k) in to_visit.items()), key=lambda x: x[1])[0]
         if current == (input_mat.MAX_X, input_mat.MAX_Y):
             print("bingo")
-            print(sum(input_mat(*p) for p in reconstruct(trace, current)) - input_mat(0, 0))
+            print(
+                sum(input_mat(*p) for p in reconstruct(trace, current))
+                - input_mat(0, 0)
+            )
             return
         del to_visit[current]
         for neighbour in source_mat.neighbours(*current):
@@ -99,7 +107,9 @@ def astar(input_mat):
             if neighbour not in visited or new_score < visited[neighbour]:
                 trace[neighbour] = current
                 visited[neighbour] = new_score
-                to_visit[neighbour] = new_score + heuristic_function(neighbour, source_mat)
-                
-    
+                to_visit[neighbour] = new_score + heuristic_function(
+                    neighbour, source_mat
+                )
+
+
 astar(new_mat(mat))

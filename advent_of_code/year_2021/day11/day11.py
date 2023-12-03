@@ -1,5 +1,6 @@
 data = [
-list(map(int, l.strip())) for l in """5483143223
+    list(map(int, l.strip()))
+    for l in """5483143223
 2745854711
 5264556173
 6141336146
@@ -8,15 +9,17 @@ list(map(int, l.strip())) for l in """5483143223
 2176841721
 6882881134
 4846848554
-5283751526""".splitlines()]
+5283751526""".splitlines()
+]
 
-data = [list(map(int, l.strip())) for l in open('input.txt')]
+data = [list(map(int, l.strip())) for l in open("input.txt")]
 
 X_MAX = len(data[0])
 Y_MAX = len(data)
 
+
 def neighbours(x, y):
-    for u in range(x - 1, x +2):
+    for u in range(x - 1, x + 2):
         for v in range(y - 1, y + 2):
             if (u, v) == (x, y):
                 continue
@@ -27,14 +30,16 @@ def neighbours(x, y):
             yield u, v
 
 
-print(list(neighbours(1,1)))
+print(list(neighbours(1, 1)))
 assert len(list(neighbours(1, 1))) == 8
 
+
 def increase_by_one(data):
-    return [[octo + 1 for octo in row] for row in data] 
+    return [[octo + 1 for octo in row] for row in data]
+
 
 def do_flash(data, x, y):
-    for (u, v) in neighbours(x, y):
+    for u, v in neighbours(x, y):
         data[v][u] += 1
 
 
@@ -47,7 +52,7 @@ def flash_octopuses(data, flashed=None):
                 do_flash(data, x, y)
     return data
 
-    
+
 def step(data):
     flashed = set()
     initial_flashed = None
@@ -57,18 +62,19 @@ def step(data):
     while initial_flashed != flashed:
         initial_flashed = set(flashed)
         flash_octopuses(data, flashed)
-    for (x, y) in flashed:
+    for x, y in flashed:
         data[y][x] = 0
-    print("\n".join("".join(str(x) if x != 0 else ' ' for x in row)for row in data))
+    print("\n".join("".join(str(x) if x != 0 else " " for x in row) for row in data))
     print()
     return data, len(flashed)
+
 
 total_flashes = 0
 
 for k in range(10000):
     data, n_flashes = step(data)
     if n_flashes == X_MAX * Y_MAX:
-        print("step",k+1)
+        print("step", k + 1)
         break
     total_flashes += n_flashes
 

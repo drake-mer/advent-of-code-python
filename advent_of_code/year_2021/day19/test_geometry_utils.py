@@ -61,19 +61,19 @@ def test_rotation_along_z_axis(a, b, c, m):
 )
 def test_rotation_modulo_4_is_identity(a, m, id_):
     if a % 4 == 0:
-        assert m ** a == id_
+        assert m**a == id_
 
     if a % 4 == 1:
-        assert m ** a == m
+        assert m**a == m
 
     if a % 4 == 2:
-        assert m ** a == (m * m)
-        assert m ** a == m ** 2
+        assert m**a == (m * m)
+        assert m**a == m**2
 
     if a % 4 == 3:
-        assert m ** a == (m ** 2) * m
-        assert m ** a == m * (m ** 2)
-        assert m ** a == m * m * m
+        assert m**a == (m**2) * m
+        assert m**a == m * (m**2)
+        assert m**a == m * m * m
 
 
 @given(integers(), integers(), integers())
@@ -86,7 +86,7 @@ def test_possible_rotation_set_size_is_24():
     m1, m2, m3 = Tx, Ty, Tz
     total_set = set()
     for k, l, m in itertools.product(range(0, 20), range(0, 20), range(0, 20)):
-        total_set.add((m1 ** k) * (m2 ** l) * (m3 ** m))
+        total_set.add((m1**k) * (m2**l) * (m3**m))
     assert len(total_set) == 24
 
 

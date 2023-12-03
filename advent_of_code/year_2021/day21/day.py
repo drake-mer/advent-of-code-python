@@ -28,8 +28,12 @@ def dirac_game(p1, p2, dice_limit=21, p1_turn=True, depth=0):
             final_number_of_wins += 0
         else:
             args = (new_player, p2) if p1_turn else (p1, new_player)
-            kwargs = {'p1_turn': not p1_turn, 'depth': depth + 1, 'dice_limit': dice_limit}
-            final_number_of_wins += (coef * dirac_game(*args, **kwargs))
+            kwargs = {
+                "p1_turn": not p1_turn,
+                "depth": depth + 1,
+                "dice_limit": dice_limit,
+            }
+            final_number_of_wins += coef * dirac_game(*args, **kwargs)
     return final_number_of_wins
 
 
@@ -38,7 +42,7 @@ def dirac_tree(start=(), depth=3):
         yield start
     else:
         for d in (1, 2, 3):
-            yield from dirac_tree(start + (d, ), depth=depth - 1)
+            yield from dirac_tree(start + (d,), depth=depth - 1)
 
 
 def dirac_probabilities():
@@ -61,7 +65,7 @@ class Player:
         return self.update_score(r)
 
     def update_score(self, dice_result: int):
-        new_position = (self.position + dice_result)
+        new_position = self.position + dice_result
         if new_position % 10 == 0:
             new_position = 10
         else:

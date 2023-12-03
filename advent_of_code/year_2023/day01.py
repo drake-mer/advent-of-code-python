@@ -31,7 +31,8 @@ class Day01(Solution):
             for d in line[::-1]:
                 if d.isdigit():
                     break
-            return int(c+d)
+            return int(c + d)
+
         return sum(extract_digits(l) for l in self.lines)
 
     def solution2(self):
@@ -54,4 +55,5 @@ class Day01(Solution):
                 if lc:
                     break
             return int(fc + lc)
+
         return sum(extract_digits(line) for line in self.lines)

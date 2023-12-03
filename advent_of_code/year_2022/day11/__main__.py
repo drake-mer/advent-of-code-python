@@ -17,7 +17,7 @@ class MonkeyPos(int):
 
 primes = {2, 3, 5, 7, 11, 13, 17, 19}
 
-CONSTANT = functools.reduce(lambda x, y: x*y, primes, 1)
+CONSTANT = functools.reduce(lambda x, y: x * y, primes, 1)
 
 
 @dataclasses.dataclass
@@ -43,14 +43,18 @@ def munch_data(payload: str) -> Monkeys:
                 continue
             elif line.startswith("Starting items: "):
                 line = line.removeprefix("Starting items: ")
-                worry_levels = deque([WorryLevel(level) for level in line.split(',')])
+                worry_levels = deque([WorryLevel(level) for level in line.split(",")])
             elif line.startswith("Operation: "):
                 line = line.removeprefix("Operation:")
-                l = "lambda" + line.replace('=', ':').replace('new', 'old')
+                l = "lambda" + line.replace("=", ":").replace("new", "old")
                 operation = functools.cache(eval(l))
             elif line.startswith("Test:"):
-                def condition(x: WorryLevel, divisor: int = int(line.split()[-1])) -> bool:
+
+                def condition(
+                    x: WorryLevel, divisor: int = int(line.split()[-1])
+                ) -> bool:
                     return (x % divisor) == 0
+
             elif line.startswith("If true"):
                 monkey_true = MonkeyPos(line.split()[-1])
             elif line.startswith("If false"):
@@ -59,13 +63,24 @@ def munch_data(payload: str) -> Monkeys:
                 raise
 
         @functools.cache
-        def action(w: WorryLevel, mt: MonkeyPos = monkey_true, mf: MonkeyPos = monkey_false, condition_=condition):
+        def action(
+            w: WorryLevel,
+            mt: MonkeyPos = monkey_true,
+            mf: MonkeyPos = monkey_false,
+            condition_=condition,
+        ):
             if condition_(w):
                 return mt
             else:
                 return mf
 
-        all_lines.append(Monkey(items=deque(worry_levels), operation=operation, action=action, ))
+        all_lines.append(
+            Monkey(
+                items=deque(worry_levels),
+                operation=operation,
+                action=action,
+            )
+        )
     return all_lines
 
 
@@ -98,5 +113,5 @@ def day_1_second_puzzle(payload):
     return a.inspection * b.inspection
 
 
-print(day_1_first_puzzle(open(basedir / 'input.txt').read()))
-print(day_1_second_puzzle(open(basedir / 'input.txt').read()))
+print(day_1_first_puzzle(open(basedir / "input.txt").read()))
+print(day_1_second_puzzle(open(basedir / "input.txt").read()))

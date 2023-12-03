@@ -45,7 +45,7 @@ def invert(matrix: Matrix):
     for a in range(0, 4):
         for b in range(0, 4):
             for c in range(0, 4):
-                potential_invert = (Tx ** a) * (Ty ** b) * (Tz ** c)
+                potential_invert = (Tx**a) * (Ty**b) * (Tz**c)
 
                 if (potential_invert * matrix) == Id:
                     return potential_invert
@@ -77,7 +77,7 @@ for alpha in {0, 1, 2, 3}:
     for beta in {0, 1, 2, 3}:
         for gamma in {0, 1, 2, 3}:
             all_cubic_group_transformations.add(
-                (Tx ** alpha) * (Ty ** beta) * (Tz ** gamma)
+                (Tx**alpha) * (Ty**beta) * (Tz**gamma)
             )
 
 assert len(all_cubic_group_transformations) == 24

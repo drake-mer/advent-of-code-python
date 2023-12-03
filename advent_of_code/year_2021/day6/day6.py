@@ -8,7 +8,7 @@ Board: TypeAlias = List
 
 @pytest.fixture
 def input_data():
-    return Counter(map(int, open('day6.txt').read().split(',')))
+    return Counter(map(int, open("day6.txt").read().split(",")))
 
 
 def evolve_pop(pop):
@@ -34,4 +34,3 @@ def test_part_1(input_data):
 
 def test_part_2(input_data):
     assert evolve(input_data, 256) == 1687617803407
-
