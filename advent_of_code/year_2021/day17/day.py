@@ -1,7 +1,6 @@
 import itertools
 from typing import TypeAlias
 
-
 target = (88, 125), (-157, -103)
 # target = (20, 30), (-10, -5)
 Velocity: TypeAlias = tuple[int, int]

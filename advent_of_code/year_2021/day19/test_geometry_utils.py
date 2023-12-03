@@ -1,9 +1,6 @@
 import itertools
 
 import pytest
-from hypothesis import given
-from hypothesis.strategies import builds, integers, one_of, tuples
-
 from geometry_utils import (
     Id,
     Matrix,
@@ -14,6 +11,8 @@ from geometry_utils import (
     all_cubic_group_transformations,
     invert,
 )
+from hypothesis import given
+from hypothesis.strategies import builds, integers, one_of, tuples
 
 
 @given(integers(), integers(), integers())

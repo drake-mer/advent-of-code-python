@@ -1,6 +1,7 @@
 import functools
-import unittest
 import itertools
+import unittest
+
 from advent_of_code.solution import Solution
 
 

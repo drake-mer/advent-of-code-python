@@ -2,7 +2,7 @@ import dataclasses
 import itertools
 import pathlib
 from collections import namedtuple
-from typing import List, Iterable
+from typing import Iterable, List
 
 basedir = pathlib.Path(__file__).parent
 

@@ -1,6 +1,5 @@
 from collections import namedtuple
 
-
 Operation = namedtuple("Operation", ["verb", "set"])
 
 

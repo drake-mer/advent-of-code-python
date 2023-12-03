@@ -1,8 +1,8 @@
+import heapq
+import sys
 from collections import Counter
 from functools import cached_property
 from pprint import pprint
-import sys
-import heapq
 
 fname = "input.txt"
 

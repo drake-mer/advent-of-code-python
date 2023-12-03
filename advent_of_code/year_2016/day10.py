@@ -1,9 +1,10 @@
 import dataclasses
 import re
 from collections import defaultdict
-from typing import Any, Union, TypeAlias
+from typing import Any, TypeAlias, Union
 
 from advent_of_code.solution import Solution
+
 """
 NB: this should be representable by a tree data structure, with the leaf being the terminal values.
 

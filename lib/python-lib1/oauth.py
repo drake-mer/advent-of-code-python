@@ -1,6 +1,5 @@
-import requests
 import lxml
-
+import requests
 
 """
 Summary:

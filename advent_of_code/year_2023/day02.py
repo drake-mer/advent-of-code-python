@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+
 from advent_of_code.solution import Solution
 
 

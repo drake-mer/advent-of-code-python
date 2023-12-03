@@ -1,7 +1,6 @@
+import base64
 from dataclasses import dataclass
 from typing import Optional
-
-import base64
 
 
 def prod(*args):

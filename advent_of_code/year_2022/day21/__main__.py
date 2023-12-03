@@ -66,9 +66,8 @@ Let's call 'I' the number we know we are looking for.
 """
 import dataclasses
 import re
-from typing import Callable, TypeAlias, Mapping
-
 from enum import Enum
+from typing import Callable, Mapping, TypeAlias
 
 
 class Value(int):

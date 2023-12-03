@@ -1,7 +1,6 @@
 import random
 
 import pytest
-
 from day19 import full_beacon_list, matcher, max_manhattan_between_scanners, verify
 from geometry_utils import Vector, all_cubic_group_transformations, invert
 from helpers import parse_file

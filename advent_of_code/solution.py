@@ -2,7 +2,7 @@ import abc
 import dataclasses
 import pathlib
 from functools import cached_property
-from typing import NamedTuple, Callable, TypeVar, Iterable, Generic
+from typing import Callable, Generic, Iterable, NamedTuple, TypeVar
 
 
 class Coordinate(NamedTuple):

@@ -2,7 +2,7 @@ import dataclasses
 from collections import defaultdict
 from functools import cached_property
 
-from advent_of_code.solution import Solution, BaseMatrix, Coordinate
+from advent_of_code.solution import BaseMatrix, Coordinate, Solution
 
 
 class EngineSchematic(BaseMatrix):

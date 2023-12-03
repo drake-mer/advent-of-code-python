@@ -1,5 +1,5 @@
-from typing import TypeAlias, List
 from collections import Counter
+from typing import List, TypeAlias
 
 import pytest
 

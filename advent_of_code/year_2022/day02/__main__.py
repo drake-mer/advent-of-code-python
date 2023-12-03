@@ -1,6 +1,6 @@
 import pathlib
 from enum import Enum
-from typing import Tuple, Literal
+from typing import Literal, Tuple
 
 basedir = pathlib.Path(__file__).parent
 
