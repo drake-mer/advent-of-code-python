@@ -39,17 +39,16 @@ testData = [(Forward 5), (Down 5), (Forward 8), (Up 3), (Down 8), (Forward 2)]
 40 13 5
 40 13 2
 40 13 10
-60 15 
+60 15
 -}
 
 main :: IO()
 main = do
   content <- readFile "day2.txt"
   let moves = map parseMove (lines content) :: [Move]
-  let (Position a b) = foldr applyMove (Position 0 0) moves 
+  let (Position a b) = foldr applyMove (Position 0 0) moves
   let (RealPosition c d e) = foldr applyMove' (RealPosition 0 0 0) $ reverse moves
   print ("real position: " ++ (show c) ++" " ++ (show d) ++ " " ++ (show e))
   print ("answer 1: " ++ (show (a * b)))
   print ("answer 2: " ++ (show (c * d)))
   return ()
-

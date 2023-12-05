@@ -66,6 +66,8 @@ print(output)
 
 pool_0 = find_pool(lowest_points[0])
 all_pools = sorted(
-    (find_pool(p) for p in lowest_points), key=lambda x: len(x), reverse=True
+    (find_pool(p) for p in lowest_points),
+    key=lambda x: len(x),
+    reverse=True,
 )
 print(len(all_pools[0]) * len(all_pools[1]) * len(all_pools[2]))

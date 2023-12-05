@@ -11,7 +11,7 @@ positionAtTime :: Disc -> Time -> Position
 positionAtTime (Disc initPos posRange index) time = (initPos + time + index) `mod` posRange
 
 readDisc :: [String] -> [Disc]
-readDisc = map readOneDisc 
+readDisc = map readOneDisc
 
 readOneDisc :: String -> Disc
 readOneDisc input = Disc initPos posRange numDisc

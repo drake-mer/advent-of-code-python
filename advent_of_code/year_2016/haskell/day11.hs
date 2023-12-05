@@ -4,7 +4,7 @@ data GameState = GameState
 data Move = Move
 
 
-solutionTree :: GameState -> 
+solutionTree :: GameState ->
 
 
 isMoveValid :: GameState -> Move -> Bool
@@ -26,5 +26,3 @@ possibleMove = undefined
 
 applyMove :: GameState -> Move -> GameState
 applyMove = undefined
-
-

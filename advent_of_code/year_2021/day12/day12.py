@@ -1,5 +1,4 @@
 from collections import defaultdict
-from pprint import pprint
 
 fname = "test.txt"
 fname = "test2.txt"
@@ -35,7 +34,7 @@ def cave_belong_to_path(cave, path):
         return cave_belong_to_path(cave, following)
 
 
-def can_visit_cave(cave, path):
+def can_visit_cave1(cave, path):
     """For Part 1"""
     if not cave.islower() or not cave_belong_to_path(cave, path):
         return CaveSequence((cave, path))

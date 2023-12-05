@@ -18,7 +18,7 @@ allRanges = map ipRange
 
 
 minForbidden :: [IpRange] -> Int
-minForbidden = fst . lowestRange 
+minForbidden = fst . lowestRange
     where lowestRange =  minimumBy (\a b -> compare (fst a) (fst b))
 
 mergeRange :: IpRange -> IpRange -> IpRange
@@ -32,15 +32,15 @@ isOverlapping (a, b) (c, d) -- we assume always that a<b and c<d
     | (d<=b && d>=a) = True -- d is in (a, b), so overlapping
     | (b == (c-1)) || (d == (a-1)) = True
     | otherwise = False -- in all the other cases, this is False
-    
+
 
 
 mergeRanges :: [IpRange] -> [IpRange]
-mergeRanges (ip1:ip2:otherIp) 
+mergeRanges (ip1:ip2:otherIp)
     | isOverlapping ip1 ip2 = mergeRanges ((mergeRange ip1 ip2):otherIp)
     | otherwise = (ip1:(mergeRanges (ip2:otherIp)))
 mergeRanges (x:[]) = [x]
-mergeRanges [] = [] 
+mergeRanges [] = []
 
 getData :: [String] -> [IpRange]
 getData = mergeRanges .sort . allRanges
@@ -58,5 +58,3 @@ allowedIp' :: IpRange -> Int -> [IpRange] -> Int
 allowedIp' (a, b) acc ((c, d):xs)
     | not . null $ xs = allowedIp' (c,d) (acc + (c-b-1)) xs
     | otherwise = acc
-
-

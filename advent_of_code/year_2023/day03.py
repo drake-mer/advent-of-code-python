@@ -19,7 +19,6 @@ class CharValue:
 
 
 class Day03(Solution):
-
     @cached_property
     def symbols(self):
         symbols = set(c.value for c in self.parsed.all_values() if not c.isdigit() and c.value != ".")
@@ -57,7 +56,10 @@ class Day03(Solution):
         result = defaultdict(set)
         output = 0
         for number in self.part_numbers:
-            number_tuple = (int("".join(c.value for c in number)), (c.coordinate for c in number))
+            number_tuple = (
+                int("".join(c.value for c in number)),
+                (c.coordinate for c in number),
+            )
             for digit in number:
                 for c in self.parsed.neighbours(digit.coordinate):
                     if c.value == "*":

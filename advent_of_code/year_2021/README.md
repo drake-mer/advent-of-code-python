@@ -11,4 +11,3 @@ out your developer insights and automatisms.
 ## What years does it contain:
 
 - 2021
-

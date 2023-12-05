@@ -1,6 +1,5 @@
 import dataclasses
 import pathlib
-from collections import deque
 from typing import Mapping, TypeAlias
 
 basedir = pathlib.Path(__file__).parent

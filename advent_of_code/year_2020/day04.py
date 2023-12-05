@@ -30,7 +30,7 @@ VALIDATORS = {
     PassportField.hgt: check_height,
     PassportField.hcl: lambda val: re.match(r"^#([a-f]|[0-9]){6}$", val),
     PassportField.ecl: lambda val: val in ("amb", "blu", "brn", "gry", "grn", "hzl", "oth"),
-    PassportField.pid: lambda val: val.isdigit() and len(val) == 9
+    PassportField.pid: lambda val: val.isdigit() and len(val) == 9,
 }
 
 
@@ -46,23 +46,19 @@ class Day04(Solution):
                 k, v = field.split(":")
                 result[PassportField(k)] = v
             return result
-        return [
-            parse_passport(raw_passport.replace("\n", " ")) for raw_passport in self.data.split("\n\n")
-        ]
+
+        return [parse_passport(raw_passport.replace("\n", " ")) for raw_passport in self.data.split("\n\n")]
 
     def ok_fields(self):
         return [p for p in self.parsed if (set(PassportField) - {PassportField.cid}).issubset(set(p))]
 
     def solution1(self):
         return len(
-            self.ok_fields()
+            self.ok_fields(),
         )
 
     def solution2(self):
         valid_passports = 0
         for passport in self.ok_fields():
-            valid_passports += all(
-                bool(VALIDATORS[key](passport[key]))
-                for key in VALIDATORS
-            )
+            valid_passports += all(bool(VALIDATORS[key](passport[key])) for key in VALIDATORS)
         return valid_passports

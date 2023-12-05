@@ -47,6 +47,12 @@ parser.add_argument(
     choices=(1, 2),
     type=int,
 )
+parser.add_argument(
+    "-",
+    "--test",
+    help="Run the class DayXXTest solution1 and solution2 methods (useful for test examples)",
+    action="store_true",
+)
 args = parser.parse_args()
 
 
@@ -105,14 +111,18 @@ def push_solution(year=None, day=None, level=None, solution=None):
         url=f"https://adventofcode.com/{year}/day/{day}/answer",
     )
     response = urllib.request.urlopen(request)
-    print(f"solution for day {day=}, {year=} at {level=} submitted successfully with status HTTP {response.code=}")
+    print(
+        f"solution for day {day=}, {year=} at {level=} submitted successfully with status HTTP {response.code=}",
+    )
     content_response = response.read().decode()
     if "you have to wait after submitting an answer before trying again" in content_response:
         print("please wait before resubmitting")
     elif "That's the right answer!" in content_response:
         print(f"You seem to have found the correct answer to {level=}, {day=}, {year=}")
     elif "That's not the right answer." in content_response:
-        print(f"you seem to have given an incorrect answer to {level=}, {day=}, {year=}")
+        print(
+            f"you seem to have given an incorrect answer to {level=}, {day=}, {year=}",
+        )
     else:
         print("<================ Unhandled response ===============>")
         print(content_response)
@@ -139,7 +149,7 @@ class {Day(day).title()}(Solution):
 
     def solution2(self):
         return "not implemented"
-"""
+""",
             )
 
     if not (data_path := (YearFolder(year) / "data")).exists():
@@ -151,7 +161,7 @@ class {Day(day).title()}(Solution):
     if not (session_token := get_token()):
         print("WARNING: could not download puzzle data, token is missing.")
         print(
-            "Try putting AOC_TOKEN (session cookie value) into your environment or a '.env' file"
+            "Try putting AOC_TOKEN (session cookie value) into your environment or a '.env' file",
         )
         return
     request = urllib.request.Request(
@@ -165,31 +175,36 @@ class {Day(day).title()}(Solution):
     if response.code != 200:
         print(f"response from server has status code {response.code}")
         print(f"response content: {response.read()}")
-        print(f"you might need to refresh your token")
+        print("you might need to refresh your token")
         sys.exit(1)
     content = response.read()
     response.close()
     with open(YearFolder(year) / "data" / DayInput(day), "w") as f:
         f.write(content.decode())
-        print("Successfully downloaded puzzle input, you can start solving the puzzle...")
+        print(
+            "Successfully downloaded puzzle input, you can start solving the puzzle...",
+        )
     webbrowser.open(f"https://adventofcode.com/{year}/day/{day}")
 
 
-def run_solution(year: int, day: int, submit: Literal[0, 1, 2] = 0):
+def run_solution(year: int, day: int, submit: Literal[0, 1, 2] = 0, test: bool = False):
     day_module_name = f"day{day:02d}"
     year_module_name: str = f"year_{year:04d}"
     module = importlib.import_module(
-        f"advent_of_code.{year_module_name}.{day_module_name}"
+        f"advent_of_code.{year_module_name}.{day_module_name}",
     )
-    solution: Solution = getattr(module, day_module_name.title())(day=day, year=year)
+    solution: Solution = getattr(
+        module,
+        day_module_name.title() + ("Test" if test else ""),
+    )(day=day, year=year)
     print("solution 1:", (s1 := solution.solution1()))
     print("solution 2:", (s2 := solution.solution2()))
     push = functools.partial(push_solution, day=day, year=year)
-    if submit == 1 and s1 and s1 != "not implemented":
+    if submit == 1 and s1 and s1 != "not implemented" and not test:
         push(level=submit, solution=s1)
-    elif submit == 2 and s2 and s2 != "not implemented":
+    elif submit == 2 and s2 and s2 != "not implemented" and not test:
         push(level=submit, solution=s2)
 
 
 prepare_puzzle_data_and_layout(args.year, args.day, args.download)
-run_solution(args.year, args.day, args.submit)
+run_solution(args.year, args.day, args.submit, args.test)

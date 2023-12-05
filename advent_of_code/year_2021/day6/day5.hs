@@ -11,4 +11,3 @@ main = do
   let rawContent = lines content :: [String]
   print ("gamma: " ++ (show ("answer"))
   return ()
-

@@ -65,7 +65,7 @@ getCode (x:xs) key = getCode xs (Mb.fromMaybe key (getNextKey x key))
   where getNextKey=selectedGetNextKey
 
 getFullCode :: [[Move]] -> [Key]
-getFullCode = getFullCode' 5 [] 
+getFullCode = getFullCode' 5 []
 
 
 getFullCode' :: Key -> [Key] -> [[Move]] -> [Key]

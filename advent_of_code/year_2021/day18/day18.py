@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import Optional
 
 import pytest
 
@@ -96,12 +95,8 @@ class Leaf(BinaryTree):
 class Node(BinaryTree):
     def __init__(self, left, right, parent=None):
         self.parent = parent
-        self.left = (
-            Leaf(left, parent=self) if isinstance(left, int) else Node(*left, self)
-        )
-        self.right = (
-            Leaf(right, parent=self) if isinstance(right, int) else Node(*right, self)
-        )
+        self.left = Leaf(left, parent=self) if isinstance(left, int) else Node(*left, self)
+        self.right = Leaf(right, parent=self) if isinstance(right, int) else Node(*right, self)
         self._exploded = False
         self._splitted = False
 
@@ -246,7 +241,6 @@ class Node(BinaryTree):
     def evolve_all(self, cont=True):
         if not cont:
             return self
-        start_value = self.as_tuple()
         while self.must_explode():
             self.explode()
         init_value = self.as_tuple()
@@ -332,14 +326,8 @@ def test_explode_tree():
     data = Node(*[[[[[9, 8], 1], 2], 3], 4])
     assert data.explode().as_tuple() == Node(*[[[[0, 9], 2], 3], 4]).as_tuple()
     assert data.explode().as_tuple() == Node(*[[[[0, 9], 2], 3], 4]).as_tuple()
-    assert (
-        Node(*[7, [6, [5, [4, [3, 2]]]]]).explode().as_tuple()
-        == Node(*[7, [6, [5, [7, 0]]]]).as_tuple()
-    )
-    assert (
-        Node(*[[6, [5, [4, [3, 2]]]], 1]).explode().as_tuple()
-        == Node(*[[6, [5, [7, 0]]], 3]).as_tuple()
-    )
+    assert Node(*[7, [6, [5, [4, [3, 2]]]]]).explode().as_tuple() == Node(*[7, [6, [5, [7, 0]]]]).as_tuple()
+    assert Node(*[[6, [5, [4, [3, 2]]]], 1]).explode().as_tuple() == Node(*[[6, [5, [7, 0]]], 3]).as_tuple()
     assert (
         Node(*[[3, [2, [8, 0]]], [9, [5, [4, [3, 2]]]]]).explode().as_tuple()
         == Node(*[[3, [2, [8, 0]]], [9, [5, [7, 0]]]]).as_tuple()
@@ -366,11 +354,9 @@ def test_split():
 
 def test_buggy_split():
     assert (
-        Node(*((((7, 7), (7, 8)), ((9, 5), (8, 0))), (((9, 10), 20), (8, (9, 0)))))
-        .split()
-        .as_tuple()
+        Node(*((((7, 7), (7, 8)), ((9, 5), (8, 0))), (((9, 10), 20), (8, (9, 0))))).split().as_tuple()
         == Node(
-            *[[[[7, 7], [7, 8]], [[9, 5], [8, 0]]], [[[9, [5, 5]], 20], [8, [9, 0]]]]
+            *[[[[7, 7], [7, 8]], [[9, 5], [8, 0]]], [[[9, [5, 5]], 20], [8, [9, 0]]]],
         ).as_tuple()
     )
 
@@ -378,7 +364,7 @@ def test_buggy_split():
 def test_magnitude():
     assert (
         Node(
-            *[[[[8, 7], [7, 7]], [[8, 6], [7, 7]]], [[[0, 7], [6, 6]], [8, 7]]]
+            *[[[[8, 7], [7, 7]], [[8, 6], [7, 7]]], [[[0, 7], [6, 6]], [8, 7]]],
         ).magnitude()
         == 3488
     )
@@ -401,7 +387,7 @@ def test_evolve2():
     assert (
         n.as_tuple()
         == Node(
-            *[[[[4, 0], [5, 4]], [[7, 7], [6, 0]]], [[8, [7, 7]], [[7, 9], [5, 0]]]]
+            *[[[[4, 0], [5, 4]], [[7, 7], [6, 0]]], [[8, [7, 7]], [[7, 9], [5, 0]]]],
         ).as_tuple()
     )
 
@@ -543,7 +529,7 @@ def test_scenario_2():
             *[
                 [[[6, 6], [7, 6]], [[7, 7], [7, 0]]],
                 [[[7, 7], [7, 7]], [[7, 8], [9, 9]]],
-            ]
+            ],
         ).as_tuple()
     )
     assert initial_node.magnitude() == 4140
@@ -563,12 +549,7 @@ def test_scenario_3():
 
 def test_scenario_4():
     lines = test_data2()
-    all_lines = [
-        (l1, l2)
-        for (k, l1) in enumerate(lines)
-        for (j, l2) in enumerate(lines)
-        if k != j
-    ]
+    all_lines = [(l1, l2) for (k, l1) in enumerate(lines) for (j, l2) in enumerate(lines) if k != j]
     max_magnitude = 0
     for l1, l2 in all_lines:
         node = Node(l1, l2)
@@ -579,12 +560,7 @@ def test_scenario_4():
 
 def test_scenario_5():
     lines = all_snailfish_pair()
-    all_lines = [
-        (l1, l2)
-        for (k, l1) in enumerate(lines)
-        for (j, l2) in enumerate(lines)
-        if k != j
-    ]
+    all_lines = [(l1, l2) for (k, l1) in enumerate(lines) for (j, l2) in enumerate(lines) if k != j]
     max_magnitude = 0
     for l1, l2 in all_lines:
         node = Node(l1, l2)

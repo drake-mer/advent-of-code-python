@@ -54,7 +54,7 @@ def missing_chars(line, store=None):
         if char in opening:
             queue.append(char)
         else:
-            o = queue.pop()
+            queue.pop()
     missing_chars = []
     while queue:
         c = queue.pop()

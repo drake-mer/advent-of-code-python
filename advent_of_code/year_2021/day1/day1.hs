@@ -20,4 +20,3 @@ main = do
   print ("answer 1: " ++ (show (stepUp my)))
   print ("answer 2: " ++ (show (stepUp (smoothData my))))
   return ()
-

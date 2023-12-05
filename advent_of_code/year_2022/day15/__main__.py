@@ -1,8 +1,6 @@
 import pathlib
 import re
 from collections import namedtuple
-from enum import Enum
-from typing import Iterable
 
 basedir = pathlib.Path(__file__).parent
 

@@ -34,4 +34,3 @@ main = do
   print (show pairs)
   print (countElems (apply 25 (polymerize pairs) sequence))
   return ()
-

@@ -27,7 +27,7 @@ def test_identity_vector_multiplication(a, b, c):
 )
 def test_identity_matrix_multiplication(a, b, c):
     assert Matrix(((1, 0, 0), (0, 1, 0), (0, 0, 1))).multiply((a, b, c)) == Matrix(
-        (a, b, c)
+        (a, b, c),
     )
 
 

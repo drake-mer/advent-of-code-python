@@ -6,7 +6,7 @@ def seat_id(boarding_pass: str):
         "F": 0,
         "B": 1,
         "R": 1,
-        "L": 0
+        "L": 0,
     }
     decimal_range = 0
     decimal_row = 0
@@ -21,9 +21,7 @@ def seat_id(boarding_pass: str):
 
 class Day05(Solution):
     def solution1(self):
-        return max(
-            seat_id(ticket) for ticket in self.lines
-        )
+        return max(seat_id(ticket) for ticket in self.lines)
 
     def solution2(self):
         all_tickets = sorted(seat_id(ticket) for ticket in self.lines)

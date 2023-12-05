@@ -52,7 +52,9 @@ class Day08(Solution):
         return screen
 
     def solution1(self):
-        return "\n" + "\n".join(map(lambda x: "".join([" " if y == "." else y for y in x]), self.screen))
+        return "\n" + "\n".join(
+            map(lambda x: "".join([" " if y == "." else y for y in x]), self.screen),
+        )
 
     def solution2(self):
         return sum((x.count("#") for x in self.screen))

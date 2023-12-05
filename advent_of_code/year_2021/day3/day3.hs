@@ -26,7 +26,7 @@ fromBinString = map getBit where
 applyCounter :: [BitVector] -> [Counter]
 applyCounter [] = []
 applyCounter bitVectors = foldl updateCounter initCounter bitVectors
-  where initCounter = map fst (zip (repeat (Counter 0 0)) (head bitVectors)) 
+  where initCounter = map fst (zip (repeat (Counter 0 0)) (head bitVectors))
 
 
 selectOxygen :: Position -> [BitVector] -> BitVector
@@ -70,7 +70,7 @@ selectCarbonDioxyd = undefined
 
 
 getGamma' :: [Counter] -> [Int]
-getGamma' = map (\(Counter z o) -> (if z > o then 0 else 1)) 
+getGamma' = map (\(Counter z o) -> (if z > o then 0 else 1))
 
 
 getEpsilon' :: [Counter] -> [Int]
@@ -97,4 +97,3 @@ main = do
   print ("oxygen: " ++ (show (getIntFromBin $ selectOxygen 0 bitVectors)))
   print ("dioxyd: " ++ (show (getIntFromBin $ selectDioxyd 0 bitVectors)))
   return ()
-

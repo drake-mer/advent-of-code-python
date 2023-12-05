@@ -11,10 +11,10 @@ answer1 = map (!! 5) $ getResult1 $ getHashList puzzleInput
 answer2 = getResult2 $ getHashList puzzleInput
 
 getPasswordFrom :: [String] -> String
-getPasswordFrom = appendTo HashMap.empty 
+getPasswordFrom = appendTo HashMap.empty
 
 appendTo :: HashMap.Map Char Char-> [String] -> String
-appendTo myMap (x:xs) = if key `HashMap.member` myMap 
+appendTo myMap (x:xs) = if key `HashMap.member` myMap
     then appendTo myMap xs
     else appendTo (HashMap.insert key value myMap) xs
     where (key, value)=(x!!5, x!!6)
@@ -32,7 +32,7 @@ getHashList :: String -> [String]
 getHashList input = map ( MD5.md5s . MD5.Str . (input ++) . show ) [0..]
 
 isPrefixOf :: String -> String -> Bool
-isPrefixOf (x:xs) (y:ys) 
+isPrefixOf (x:xs) (y:ys)
     | x==y =  xs `isPrefixOf` ys
     | otherwise = False
 isPrefixOf (xs:_) [] = False

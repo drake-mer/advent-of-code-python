@@ -5,13 +5,13 @@ input = 3005290
 type Circle = Vector.Vector Elve
 type Elve = Integer
 
--- circle :: Circle 
+-- circle :: Circle
 -- circle = Vector.fromList [1..input]
 
 {- The nextPos gives the reached position across the
  - circle from the starting currentPos. Indexing starts
  - at 0. -}
-nextPos :: Int -> Int -> Int 
+nextPos :: Int -> Int -> Int
 nextPos currentPos size = ((currentPos + (size `div` 2)) ) `mod` size
 
 remove :: Int -> Circle -> Circle
@@ -34,4 +34,3 @@ circle = Vector.fromList [1..5]
 
 answer :: (Circle, Int)
 answer = emptyCircle (Vector.fromList [1..input], 0)
- 

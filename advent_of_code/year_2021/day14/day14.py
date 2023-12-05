@@ -10,20 +10,18 @@ sequence = dict(
     [
         (pair, element)
         for (pair, element) in map(
-            lambda l: l.strip().split(" -> "), part2.splitlines()
+            lambda l: l.strip().split(" -> "),
+            part2.splitlines(),
         )
-    ]
+    ],
 )
 pprint(sequence)
 
 print("Number of possible pairs", len(sequence))
-print("Number of tokens", len(all_tokens))
 print(polymer)
 
 
-pair_mapping = {
-    pair: (pair[0] + elem, elem + pair[1]) for pair, elem in sequence.items()
-}
+pair_mapping = {pair: (pair[0] + elem, elem + pair[1]) for pair, elem in sequence.items()}
 
 
 def make_pairs(sequence: str):
@@ -38,7 +36,6 @@ def answer(counter: Counter):
 
 
 def solve(initial_sequence, iterate=10):
-    all_counters = []
     element_counter = Counter(initial_sequence)
     pair_counter = Counter(make_pairs(initial_sequence))
     for k in range(iterate):

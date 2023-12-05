@@ -27,12 +27,12 @@ input_puzzle = [   "cpy 1 a",
 
 data State = State Program Memory Address
 type Address = Int
-data Instruction = Jnz Char Int | Dec Char | Inc Char | CpyVar Char Char | CpyInt Int Char 
+data Instruction = Jnz Char Int | Dec Char | Inc Char | CpyVar Char Char | CpyInt Int Char
     deriving (Read, Show)
 type Program = [Instruction]
 type Memory = Map.Map Char Int
 
-instance Show State where 
+instance Show State where
     show (State p m a ) = (show m) ++ " instr: " ++ if a>length p - 1 then "out of bound" else show(p!!a) ++ ", at addr: " ++ show(a)
 
 readInstruction :: String -> Instruction
@@ -45,7 +45,7 @@ readInstruction input
     where [x,y,z] = splitInstruction input
 
 splitInstruction :: String -> [String]
-splitInstruction input 
+splitInstruction input
     | length (words input) == 3 = words input
     | length (words input) == 2 = (words input) ++ [[]]
 
@@ -70,7 +70,7 @@ initProg1 p = (State p (Map.fromList (zip ['a'..'d'] (repeat 0) )) 0)
 
 
 execProgramLive :: State -> State
-execProgramLive (State p m a) 
+execProgramLive (State p m a)
     | a>(length p)-1 || a<0 = State p m a
     | otherwise = execProgramLive(execInstruction (State p m a))
 
@@ -86,6 +86,6 @@ execNInstruction n ((State p m a):foo)
     | otherwise = execNInstruction (n-1) ((execInstruction (State p m a)):(State p m a):foo)
 
 execInstruction :: State -> State
-execInstruction (State p m a) 
+execInstruction (State p m a)
     | (a > length p - 1) || a<0 = State p m a
     | otherwise = apply (p!!a) (State p m a)

@@ -26,8 +26,8 @@ def test_match_scanner_1_and_scanner_2(data_test):
     assert (
         len(
             set(data_test[0]).intersection(
-                set((rotation.apply(b) + translation) for b in data_test[1])
-            )
+                set((rotation.apply(b) + translation) for b in data_test[1]),
+            ),
         )
         == 12
     )
@@ -51,7 +51,7 @@ def test_with_real_data(real_data):
 def test_matcher(rotation):
     initial_source = {
         Vector(
-            (random.randint(0, 1000), random.randint(0, 999), random.randint(0, 999))
+            (random.randint(0, 1000), random.randint(0, 999), random.randint(0, 999)),
         )
         for _ in range(30)
     }

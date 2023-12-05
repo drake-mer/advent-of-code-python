@@ -1,10 +1,3 @@
-import dataclasses
-import re
-from collections import defaultdict
-from typing import Any, TypeAlias, Union
-
-from advent_of_code.solution import Solution
-
 """
 NB: this should be representable by a tree data structure, with the leaf being the terminal values.
 
@@ -32,12 +25,12 @@ So the way to solve this now is to have the whole data set as a dictionary where
 to the interesting part.
 
 NB: on psychology of programming. In my brain I had a hard time deciding what was the good approach. I started
-to implement it in the more abstract way with this notion High and Low, but not seeing exactly how it would come 
+to implement it in the more abstract way with this notion High and Low, but not seeing exactly how it would come
 out in practice, I decided to go down the route of brutally interpreting stuff. I even started thinking that a
 sequential execution would give me the answer, albeit it was not working.
 
 Also, if you want to solve the tree, you actually want to evaluate all the leaf until you meet the good pair.
-This means that you can’t really work with immutable objects, you at least need a big dictionary to store the 
+This means that you can’t really work with immutable objects, you at least need a big dictionary to store the
 changed items.
 
 NB: it is a good idea to use immutable values whenever possible.
@@ -45,6 +38,11 @@ NB: it is a good idea to use immutable values whenever possible.
 So indeed, we need to resolve the tree as a lazy data structure. Beautiful exercise but a bit hard if you ask me
 for a 10th day.
 """
+import dataclasses
+import re
+from typing import Any
+
+from advent_of_code.solution import Solution
 
 
 @dataclasses.dataclass
@@ -58,7 +56,10 @@ class Bot:
         elif all(v is None for v in self.values):
             return Bot(id=self.id, values=(val, None))
         else:
-            return Bot(id=self.id, values=(val, *(v for v in self.values if v is not None)))
+            return Bot(
+                id=self.id,
+                values=(val, *(v for v in self.values if v is not None)),
+            )
 
     @property
     def full(self):
@@ -91,7 +92,10 @@ class SetValue:
 
     @classmethod
     def parse(cls, line):
-        val, bot_id = map(int, re.search(r"value (\d+) goes to bot (\d+)", line).groups())
+        val, bot_id = map(
+            int,
+            re.search(r"value (\d+) goes to bot (\d+)", line).groups(),
+        )
         return cls(value=val, recipient=Bot(id=bot_id))
 
 
@@ -110,7 +114,7 @@ class MoveValue:
         return cls(
             low=get_recipient(low_rec_type, low_rec),
             high=get_recipient(high_rec_type, high_rec),
-            sender=Bot(id=int(bot_id))
+            sender=Bot(id=int(bot_id)),
         )
 
 
@@ -132,11 +136,13 @@ class StateMachine(dict):
     def __setitem__(self, obj, obj_value):
         if obj.id != obj_value.id:
             raise ValueError("id mismatch")
-        super().__getitem__(obj.__class__.__name__).__setitem__(obj.id,  obj_value)
+        super().__getitem__(obj.__class__.__name__).__setitem__(obj.id, obj_value)
 
     def run(self, instruction):
         if isinstance(instruction, SetValue):
-            self[instruction.recipient] = self[instruction.recipient].update(instruction.value)
+            self[instruction.recipient] = self[instruction.recipient].update(
+                instruction.value,
+            )
         elif isinstance(instruction, MoveValue):
             high_rec = instruction.high
             low_rec = instruction.low
@@ -187,5 +193,3 @@ class Day10(Solution):
         for k in (0, 1, 2):
             r *= machine[Bin(id=k)].value
         return r
-
-

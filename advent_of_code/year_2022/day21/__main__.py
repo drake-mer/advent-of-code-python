@@ -1,6 +1,6 @@
 # Thought process
 # What are we discussing ??
-"""
+r"""
 1. Monkeys
 2. Yelling
 3. Operations and Math, that's the core business
@@ -33,7 +33,8 @@ It's also akin to what Einstein said: a problem well posed is 50% of the solutio
 monkey business.
 
 At this point, we think that the parsing is correct and that the model is correct for the domain we are trying to solve.
-It remains some kind of ambiguity. We know that this problem is typical of lazy loading of values and that we can probably
+It remains some kind of ambiguity. We know that this problem is typical of lazy loading of values
+and that we can probably
 come with an elegant way to solve it. Will we manage to derive an elegant solution from this?
 
 HO NO! Domain Model changed! Instead of computing operations, we need to solve an equation! That's so painful! How
@@ -82,10 +83,17 @@ Operation: TypeAlias = Callable[[Value, Value], Value]
 
 
 class _Operation(Enum):
-    ADD: Operation = lambda a, b: a + b
-    SUB: Operation = lambda a, b: a - b
-    MUL: Operation = lambda a, b: a * b
-    DIV: Operation = lambda a, b: a // b
+    def ADD(a, b):
+        return a + b
+
+    def SUB(a, b):
+        return a - b
+
+    def MUL(a, b):
+        return a * b
+
+    def DIV(a, b):
+        return a // b
 
 
 @dataclasses.dataclass
@@ -98,7 +106,8 @@ class MonkeyOperation:
 MonkeyReference: TypeAlias = Reference
 HumanReference: TypeAlias = Reference
 MonkeyAssembly: TypeAlias = Mapping[
-    MonkeyReference | HumanReference, MonkeyOperation | Value
+    MonkeyReference | HumanReference,
+    MonkeyOperation | Value,
 ]
 
 

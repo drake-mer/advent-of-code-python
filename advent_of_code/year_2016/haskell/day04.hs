@@ -16,9 +16,9 @@ getName :: FullName -> Name
 getName =  map (\x-> if x=='-' then ' ' else x) . takeWhile (\x -> x `notElem` ['0'..'9'])
 
 freqTable :: Name -> [(Char, Int)]
-freqTable name = computeFreqTable HashMap.empty name 
-    where 
-        computeFreqTable hashmap (x:xs) 
+freqTable name = computeFreqTable HashMap.empty name
+    where
+        computeFreqTable hashmap (x:xs)
             | isNothing oldValue = computeFreqTable (HashMap.insert x 1 hashmap) xs
             | otherwise = computeFreqTable (HashMap.adjust (+1) x hashmap) xs
             where oldValue = HashMap.lookup x hashmap;
@@ -26,17 +26,17 @@ freqTable name = computeFreqTable HashMap.empty name
 
 getSectorId :: Name -> SectorId
 getSectorId = read . takeWhile isNumber . dropWhile (not.isNumber)
- 
+
 isNumber :: Char -> Bool
 isNumber = flip elem ['0'..'9']
 isLetter :: Char -> Bool
 isLetter = flip elem ['a'..'z']
-{- compute the hash code from the data given 
+{- compute the hash code from the data given
  - in http://adventofcode.com/2016/day/4 -}
 getCode :: Name -> HashCode
 getCode = take 5 . map fst . List.sortBy cmpFreq . freqTable . getEncryptedName
 
-{- get the hash at the end of the string made of only 5 
+{- get the hash at the end of the string made of only 5
  - letters enclosed into a pair of brackets ([])-}
 getHash :: FullName -> HashCode
 getHash = take 5 . tail . dropWhile ('[' /=)
@@ -54,7 +54,7 @@ translateSentence :: FullName -> String
 translateSentence = \x -> translateSentence' (getSectorId x) x
 
 translateSentence' :: Int -> Name -> Sentence
-translateSentence' n = map (\x -> if x `elem` ['a'..'z'] then shiftN n x else x) 
+translateSentence' n = map (\x -> if x `elem` ['a'..'z'] then shiftN n x else x)
 
 shiftN :: Int -> Char -> Char
 shiftN n x = Char.chr ( (Char.ord x - 97 + n) `mod` 26 + 97 )

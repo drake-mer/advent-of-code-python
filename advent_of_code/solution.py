@@ -2,7 +2,7 @@ import abc
 import dataclasses
 import pathlib
 from functools import cached_property
-from typing import Callable, Generic, Iterable, NamedTuple, TypeVar
+from typing import Callable, Iterable, NamedTuple, TypeVar
 
 
 class Coordinate(NamedTuple):
@@ -16,7 +16,6 @@ ParseResult = TypeVar("ParseResult")
 
 
 class BaseMatrix(list[list[T]]):
-
     def get(self, c: Coordinate) -> T:
         if not self.in_map(c):
             raise ValueError(f"Coordinate {c} seems out of bound for matrix")
@@ -40,8 +39,7 @@ class BaseMatrix(list[list[T]]):
 
     def neighbours(self, c: Coordinate, diagonal=True):
         return [
-            self.get(neighbour_coordinate)
-            for neighbour_coordinate in self.neighbour_coordinates(c, diagonal=diagonal)
+            self.get(neighbour_coordinate) for neighbour_coordinate in self.neighbour_coordinates(c, diagonal=diagonal)
         ]
 
     def neighbour_coordinates(self, c: Coordinate, diagonal=True) -> list[Coordinate]:
@@ -50,20 +48,22 @@ class BaseMatrix(list[list[T]]):
 
         def diagonal_neighbours(y, x):
             return [
-                Coordinate(y=y-1, x=x-1),
-                Coordinate(y=y-1, x=x+1),
-                Coordinate(y=y+1, x=x-1),
-                Coordinate(y=y+1, x=x+1)
+                Coordinate(y=y - 1, x=x - 1),
+                Coordinate(y=y - 1, x=x + 1),
+                Coordinate(y=y + 1, x=x - 1),
+                Coordinate(y=y + 1, x=x + 1),
             ]
 
         return [
-            c for c in [
-                Coordinate(y=y-1, x=x),
-                Coordinate(y=y+1, x=x),
-                Coordinate(y=y, x=x-1),
-                Coordinate(y=y, x=x+1),
-                *(diagonal_neighbours(y, x) if diagonal else [])
-            ] if self.in_map(c)
+            c
+            for c in [
+                Coordinate(y=y - 1, x=x),
+                Coordinate(y=y + 1, x=x),
+                Coordinate(y=y, x=x - 1),
+                Coordinate(y=y, x=x + 1),
+                *(diagonal_neighbours(y, x) if diagonal else []),
+            ]
+            if self.in_map(c)
         ]
 
 
@@ -74,16 +74,14 @@ def default_wrapper(*, value: str, _: Coordinate):
 @dataclasses.dataclass(frozen=True)
 class Solution:
     """A base class to inherit from when implementing solutions."""
+
     day: int
     year: int
 
     @cached_property
     def data(self):
         with open(
-            pathlib.Path(__file__).parent
-            / f"year_{self.year}"
-            / "data"
-            / f"day{self.day:02d}.txt"
+            pathlib.Path(__file__).parent / f"year_{self.year}" / "data" / f"day{self.day:02d}.txt",
         ) as f:
             data = f.read()
         return data
@@ -114,13 +112,10 @@ class Solution:
         *,
         start=0,
         end=None,
-        wrapper: Callable[[str, Coordinate], T] = default_wrapper
+        wrapper: Callable[[str, Coordinate], T] = default_wrapper,
     ) -> BaseMatrix[T]:
         slice_ = self.lines[start:end]
-        output = [
-            [wrapper(char, Coordinate(x=x, y=y)) for x, char in enumerate(row)]
-            for y, row in enumerate(slice_)
-        ]
+        output = [[wrapper(char, Coordinate(x=x, y=y)) for x, char in enumerate(row)] for y, row in enumerate(slice_)]
         return BaseMatrix[T](output)
 
     @cached_property

@@ -33,7 +33,7 @@ getPoint (Point x y) = (x, y)
 
 parsePoint :: String -> Point
 parsePoint inputString = Point (read xs :: Int) (read ys :: Int)
-  where [xs, ys] = splitOn "," inputString 
+  where [xs, ys] = splitOn "," inputString
 
 
 updateCounter :: (Int, Int) -> Map.Map (Int, Int) Int -> Map.Map (Int, Int) Int

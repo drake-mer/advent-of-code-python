@@ -51,7 +51,8 @@ def munch_data(payload: str) -> Monkeys:
             elif line.startswith("Test:"):
 
                 def condition(
-                    x: WorryLevel, divisor: int = int(line.split()[-1])
+                    x: WorryLevel,
+                    divisor: int = int(line.split()[-1]),
                 ) -> bool:
                     return (x % divisor) == 0
 
@@ -79,7 +80,7 @@ def munch_data(payload: str) -> Monkeys:
                 items=deque(worry_levels),
                 operation=operation,
                 action=action,
-            )
+            ),
         )
     return all_lines
 

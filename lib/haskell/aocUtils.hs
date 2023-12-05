@@ -10,5 +10,3 @@ readInput' fname = do
 
 readInput :: IO [String]
 readInput = readInput' "input.txt"
-
-

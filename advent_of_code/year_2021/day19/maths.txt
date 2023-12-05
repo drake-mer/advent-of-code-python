@@ -2,7 +2,7 @@ The group of 90 degrees rotation around an axis form a group.
 
 Let's try to derive the whole set of possible rotations, using
 clockwise rotation around any axis (with the perspective of an observer
-toward which the rotation axis is pointing). 
+toward which the rotation axis is pointing).
 
 Here is a 3 dimensional cartesian frame.
    z
@@ -31,7 +31,7 @@ Where
 So if we rotate the frame, the resulting vector would be, for the same position,
 in the new frame:
 
-(  1   0   0 ) ( x )   ( x' )   (  x  ) 
+(  1   0   0 ) ( x )   ( x' )   (  x  )
 (  0   0   1 ) ( y ) = ( y' ) = (  z  )
 (  0  -1   0 ) ( z )   ( z' )   ( -y  )
 
@@ -69,13 +69,13 @@ To generate the whole possible set of transformation, we can apply matrix multip
 we fill the whole set of possible transformation. It is kind of a generative proof and we will
 cheat by using the computer instead of computing all the tranformations by hand.
 
-But the whole set of transformation should be in 
+But the whole set of transformation should be in
 
 $$\alpha^{i}\beta^{j}\gamma^{k}, (i, j, k) \in \lbrace 1, 2, 3, 4 \rbrace^3
 
 Here is the following code to do that:
 
-{% include_relative snippet1.txt %}  
+{% include_relative snippet1.txt %}
 
 Notice that with the use of the hypothesis framework, I am able to test invariants
 in my code seamlessly, without having to hardcode too much test cases (and it is great).
@@ -93,7 +93,7 @@ the following:
        2. Take the inner product of the reference list and the previously created list
        3. Output the difference between the two lists
        4. If a fixed vector as result appears more than 12 times, then do
-          a check to validate that the same beacon is not twice or more in this pairing 
+          a check to validate that the same beacon is not twice or more in this pairing
           (ie, the final solution must be valid)
           - If the solution is valid, register the transformation and the translation vector:
             you have identified the position of the scanner being studied relative to the scanner 0.
@@ -122,7 +122,7 @@ for studiedScanner in studiedScanners:
 This algorithm should converge toward the set of position and transformation
 to apply for each scanner to get beacon in the reference frame of scanner[0].
 
-The remaining work is now to apply the inverse transformation to the set of 
+The remaining work is now to apply the inverse transformation to the set of
 beacon associated with every scanner, and form the total set of beacons, hence
 computing the total number of beacons detected.
 
@@ -169,4 +169,3 @@ some trial and errors before getting it right.
 The `hypothesis` library, in this context, is extremely useful. It allows to check that
 your invariants are well respected in your code. It could have helped us tremendously
 in previous puzzles to get around some hard to find bugs.
-

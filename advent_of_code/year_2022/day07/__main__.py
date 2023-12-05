@@ -47,7 +47,7 @@ def munch_data(payload: str) -> list[Instruction | Folder | File]:
             line = line.removeprefix("$ ")
             cmd, *args = line.split(" ")
             all_lines.append(
-                Instruction(instruction=Command(cmd), arguments=list(args) or None)
+                Instruction(instruction=Command(cmd), arguments=list(args) or None),
             )
         elif line.startswith("dir "):
             all_lines.append(Folder(line.removeprefix("dir ")))
@@ -91,9 +91,7 @@ def tree(data: list[Instruction | Folder | File]):
                             case Folder("/"):
                                 current = root
                             case Folder(_):
-                                if not (
-                                    subfolder := current.get_folder(directory.name)
-                                ):
+                                if not (subfolder := current.get_folder(directory.name)):
                                     raise ValueError
                                 current = subfolder
     return root

@@ -1,8 +1,8 @@
 import sys
 
-sys.setrecursionlimit(10000)
-
 from part1 import read_data
+
+sys.setrecursionlimit(10000)
 
 
 def test_part21():

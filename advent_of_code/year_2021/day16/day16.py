@@ -155,7 +155,7 @@ def version_sum(packet, s=0):
 
 def unfold_packets(packet, acc=None):
     """Return the full list of packets flattened (not useful for the exercise)"""
-    if acc == None:
+    if acc is None:
         acc = []
     acc.append(packet)
     for p in packet.packets:
@@ -166,6 +166,6 @@ def unfold_packets(packet, acc=None):
 if __name__ == "__main__":
     for data in input_list[:]:
         packet = parse_packet(
-            "".join("{:08b}".format(c) for c in base64.b16decode(data)).rstrip("0")
+            "".join("{:08b}".format(c) for c in base64.b16decode(data)).rstrip("0"),
         )
         print("version sum:", version_sum(packet), "packet value:", packet.value)

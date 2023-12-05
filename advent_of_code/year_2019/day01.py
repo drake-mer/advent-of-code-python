@@ -1,4 +1,3 @@
-
 from advent_of_code.solution import Solution
 
 
@@ -22,6 +21,3 @@ class Day01(Solution):
 
     def solution2(self):
         return sum(self.all_fuel(craft) for craft in self.parsed)
-
-
-

@@ -35,9 +35,8 @@ class Board(dict):
 
     @property
     def wins(self):
-        return (
-            any(all(self[x, y].marked for x in range(5)) for y in range(5))
-            or any(all(self[x, y].marked for y in range(5)) for x in range(5))
+        return any(all(self[x, y].marked for x in range(5)) for y in range(5)) or any(
+            all(self[x, y].marked for y in range(5)) for x in range(5)
         )
 
 
@@ -47,7 +46,7 @@ class Day04(Solution):
         all_boards = []
         k = 2
         while self.lines[k:]:
-            all_boards.append(Board(read_board(self.lines[k:k+5])))
+            all_boards.append(Board(read_board(self.lines[k : k + 5])))
             k += 6
         return bingo_numbers, all_boards
 

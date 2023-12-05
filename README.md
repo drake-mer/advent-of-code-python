@@ -14,4 +14,3 @@ languages along the way.
 - [Advent of code 2021](./2021/README.md)
 - [Advent of code 2022](./2022/README.md)
 - [Advent of code 2023](./2023/README.md)
-

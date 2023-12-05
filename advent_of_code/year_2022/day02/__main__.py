@@ -94,7 +94,8 @@ def play2_from_issue(p1: Choice, p2: Issue) -> Choice:
 
 
 def score1(
-    p1: Literal["A", "B", "C"], p2: Literal["X", "Y", "Z"]
+    p1: Literal["A", "B", "C"],
+    p2: Literal["X", "Y", "Z"],
 ) -> Tuple[Score, Score]:
     p1 = Choice(getattr(P1, p1))
     p2 = Choice(getattr(P2, p2))
@@ -104,13 +105,15 @@ def score1(
 
 
 def score2(
-    p1: Literal["A", "B", "C"], p2: Literal["X", "Y", "Z"]
+    p1: Literal["A", "B", "C"],
+    p2: Literal["X", "Y", "Z"],
 ) -> Tuple[Score, Score]:
     a, b = intrinsic_score(Choice(getattr(P1, p1))), intrinsic_score(
-        play2_from_issue(Choice(getattr(P1, p1)), Issue(p2))
+        play2_from_issue(Choice(getattr(P1, p1)), Issue(p2)),
     )
     c, d = match_score(
-        Choice(getattr(P1, p1)), play2_from_issue(Choice(getattr(P1, p1)), Issue(p2))
+        Choice(getattr(P1, p1)),
+        play2_from_issue(Choice(getattr(P1, p1)), Issue(p2)),
     )
     return a + c, b + d
 

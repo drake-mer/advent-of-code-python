@@ -21,4 +21,3 @@ main = do
   print ("oxygen: " ++ (show (getIntFromBin $ selectOxygen 0 bitVectors)))
   print ("dioxyd: " ++ (show (getIntFromBin $ selectDioxyd 0 bitVectors)))
   return ()
-

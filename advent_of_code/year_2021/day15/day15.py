@@ -1,8 +1,4 @@
-import heapq
-import sys
-from collections import Counter
 from functools import cached_property
-from pprint import pprint
 
 fname = "input.txt"
 
@@ -97,8 +93,7 @@ def astar(input_mat):
         if current == (input_mat.MAX_X, input_mat.MAX_Y):
             print("bingo")
             print(
-                sum(input_mat(*p) for p in reconstruct(trace, current))
-                - input_mat(0, 0)
+                sum(input_mat(*p) for p in reconstruct(trace, current)) - input_mat(0, 0),
             )
             return
         del to_visit[current]
@@ -108,7 +103,8 @@ def astar(input_mat):
                 trace[neighbour] = current
                 visited[neighbour] = new_score
                 to_visit[neighbour] = new_score + heuristic_function(
-                    neighbour, source_mat
+                    neighbour,
+                    source_mat,
                 )
 
 

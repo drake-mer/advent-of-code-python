@@ -1,6 +1,3 @@
-from collections import Counter
-from dataclasses import dataclass
-
 from advent_of_code.solution import Solution
 
 

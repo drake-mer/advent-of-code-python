@@ -24,7 +24,7 @@ class Matrix(tuple):
             return self.multiply(other)
         else:
             raise NotImplementedError(
-                f"Cannot multiply object of type {type(self)} with object of type {type(other)}"
+                f"Cannot multiply object of type {type(self)} with object of type {type(other)}",
             )
 
     def __pow__(self, exponent: int):
@@ -51,7 +51,7 @@ def invert(matrix: Matrix):
                     return potential_invert
 
     raise ValueError(
-        f"Could not invert matrix {matrix}: maybe it is not an element of the group?"
+        f"Could not invert matrix {matrix}: maybe it is not an element of the group?",
     )
 
 
@@ -66,7 +66,7 @@ Tz = Matrix(
         (0, 1, 0),
         (-1, 0, 0),
         (0, 0, 1),
-    )
+    ),
 )
 
 Id = Matrix(((1, 0, 0), (0, 1, 0), (0, 0, 1)))
@@ -77,7 +77,7 @@ for alpha in {0, 1, 2, 3}:
     for beta in {0, 1, 2, 3}:
         for gamma in {0, 1, 2, 3}:
             all_cubic_group_transformations.add(
-                (Tx**alpha) * (Ty**beta) * (Tz**gamma)
+                (Tx**alpha) * (Ty**beta) * (Tz**gamma),
             )
 
 assert len(all_cubic_group_transformations) == 24

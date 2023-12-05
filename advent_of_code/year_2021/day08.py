@@ -28,7 +28,8 @@ gcafb gcf dcaebfg ecagb gf abcdeg gaef cafbge fdbac fegbdc | fgae cfgab fg bagce
 for line in yy():
     all_digits, four_display = line.split(" | ")
     all_digits = sorted(
-        ["".join(sorted(x)) for x in all_digits.split()], key=lambda x: (len(x), x)
+        ["".join(sorted(x)) for x in all_digits.split()],
+        key=lambda x: (len(x), x),
     )
     four_display = ["".join(sorted(d)) for d in four_display.split()]
     data.append((all_digits, four_display))
