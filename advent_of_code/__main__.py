@@ -123,6 +123,8 @@ def push_solution(year=None, day=None, level=None, solution=None):
         print(
             f"you seem to have given an incorrect answer to {level=}, {day=}, {year=}",
         )
+    elif "That's not the right answer; your answer is too high." in content_response:
+        print(f"your answer was {solution} and is too high according to the website")
     else:
         print("<================ Unhandled response ===============>")
         print(content_response)
