@@ -42,9 +42,11 @@ class Hand:
     def __eq__(self, other: "Hand"):
         return self.cards == other.cards
 
-    def __le__(self, other: "Hand"):
-        if lesser_hand := self.hand_value < other.hand_value:
+    def __lt__(self, other: "Hand"):
+        if lesser_hand := (self.value < other.value):
             return lesser_hand
+        elif self.value > other.value:
+            return False
         self_cards = list(((card, count) for (card, count) in Counter(self.cards).items()))
         self_cards.sort(
             key=lambda t: t[1],
@@ -55,7 +57,6 @@ class Hand:
             key=lambda t: t[1],
             reverse=True
         )
-        assert len(other_cards) == len(self_cards)
         for (sc, _), (oc, _) in zip(self_cards, other_cards):
             if sc == oc:
                 continue
@@ -66,7 +67,7 @@ class Hand:
         return False
 
     @property
-    def hand_value(self):
+    def value(self):
         return HAND_RANKING[tuple(sorted(Counter(self.cards).values()))]
 
 
