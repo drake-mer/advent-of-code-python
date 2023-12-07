@@ -2,7 +2,6 @@ import dataclasses
 import itertools
 from collections import Counter
 from functools import cached_property
-from typing import Type
 
 from advent_of_code.solution import Solution
 
@@ -68,7 +67,6 @@ HAND_NAME = {
 class Hand:
     cards: list[Card]
     bet: int
-    card_class: Type[Card] = Card
 
     def __hash__(self):
         return (self.bet, *(c.figure for c in self.cards)).__hash__()
@@ -107,7 +105,7 @@ class Hand:
         return HAND_RANKING[self.condensed]
 
     @property
-    def joker_value(self):
+    def value_with_joker(self):
         if not (m := list(self.mutations)):
             return self.value
         return max(h.value for h in m)
@@ -116,7 +114,9 @@ class Hand:
     def mutations(self):
         possible_values = [c for c in self.cards if c.figure != "J"]
         change_positions = [pos for pos, c in enumerate(self.cards) if c.figure == "J"]
-        for mutated_set in itertools.product(*itertools.repeat(possible_values, len(change_positions))):
+        for mutated_set in itertools.product(
+            *itertools.repeat(possible_values, len(change_positions))
+        ):
             new_cards = list(self.cards)
             for pos, val in zip(change_positions, mutated_set):
                 new_cards[pos] = val
@@ -136,19 +136,28 @@ class Day07(Solution):
 
     def solution1(self):
         return sum(
-            [position * hand.bet for position, hand in enumerate(sorted(self.parsed), 1)]
+            [
+                position * hand.bet
+                for position, hand in enumerate(sorted(self.parsed), 1)
+            ]
         )
 
     def solution2(self):
-        parsed = [
-            Hand(cards=[Card2(figure=c.figure) for c in hand.cards], bet=hand.bet, card_class=Card2)
-            for hand in self.parsed
-        ]
         return sum(
             [
                 position * hand.bet
                 for position, hand in enumerate(
-                    sorted(parsed, key=lambda h: (h.joker_value, h.cards)), 1
+                    sorted(
+                        [
+                            Hand(
+                                cards=[Card2(figure=c.figure) for c in hand.cards],
+                                bet=hand.bet,
+                            )
+                            for hand in self.parsed
+                        ],
+                        key=lambda h: (h.value_with_joker, h.cards),
+                    ),
+                    1,
                 )
             ],
         )
