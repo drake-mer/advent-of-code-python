@@ -1,6 +1,8 @@
 import dataclasses
+import itertools
 from collections import Counter
 from functools import cached_property
+from typing import Type
 
 from advent_of_code.solution import Solution
 
@@ -10,7 +12,7 @@ class Card:
     figure: str
 
     def __lt__(self, other):
-        assert isinstance(other, Card)
+        assert isinstance(other, type(self))
         return self.value < other.value
 
     @property
@@ -18,10 +20,25 @@ class Card:
         return CARD_RANKING[self]
 
 
+class Card2(Card):
+    @property
+    def value(self):
+        return NEW_CARD_RANKING[self]
+
+
 CARD_RANKING = {
     Card(card): rank
     for rank, card in enumerate(
         "AKQJT98765432"[::-1],
+        1,
+    )
+}
+
+
+NEW_CARD_RANKING = {
+    Card2(card): rank
+    for rank, card in enumerate(
+        "AKQT98765432J"[::-1],
         1,
     )
 }
@@ -51,6 +68,10 @@ HAND_NAME = {
 class Hand:
     cards: list[Card]
     bet: int
+    card_class: Type[Card] = Card
+
+    def __hash__(self):
+        return (self.bet, *(c.figure for c in self.cards)).__hash__()
 
     def __eq__(self, other: "Hand"):
         return self.cards == other.cards
@@ -60,14 +81,7 @@ class Hand:
             return True
         elif self.value > other.value:
             return False
-        for sc, oc in zip(self.cards, other.cards):
-            if sc == oc:
-                continue
-            if sc < oc:
-                return True
-            if sc > oc:
-                break
-        return False
+        return self.cards < other.cards
 
     @cached_property
     def counted_cards(self):
@@ -92,6 +106,23 @@ class Hand:
     def value(self):
         return HAND_RANKING[self.condensed]
 
+    @property
+    def joker_value(self):
+        if not (m := list(self.mutations)):
+            return self.value
+        return max(h.value for h in m)
+
+    @property
+    def mutations(self):
+        possible_values = [c for c in self.cards if c.figure != "J"]
+        change_positions = [pos for pos, c in enumerate(self.cards) if c.figure == "J"]
+        for mutated_set in itertools.product(*itertools.repeat(possible_values, len(change_positions))):
+            new_cards = list(self.cards)
+            for pos, val in zip(change_positions, mutated_set):
+                new_cards[pos] = val
+            h = Hand(cards=new_cards, bet=self.bet)
+            yield h
+
 
 class Day07(Solution):
     def parse(self):
@@ -104,13 +135,23 @@ class Day07(Solution):
         return all_hands
 
     def solution1(self):
-        print(*[(x.bet, x.value, str(x)) for x in sorted(self.parsed)], sep="\n")
         return sum(
-            [position * hand.bet for position, hand in enumerate(sorted(self.parsed), 1)],
+            [position * hand.bet for position, hand in enumerate(sorted(self.parsed), 1)]
         )
 
     def solution2(self):
-        return "not implemented"
+        parsed = [
+            Hand(cards=[Card2(figure=c.figure) for c in hand.cards], bet=hand.bet, card_class=Card2)
+            for hand in self.parsed
+        ]
+        return sum(
+            [
+                position * hand.bet
+                for position, hand in enumerate(
+                    sorted(parsed, key=lambda h: (h.joker_value, h.cards)), 1
+                )
+            ],
+        )
 
 
 class Day07Test(Day07):
