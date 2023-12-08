@@ -1,14 +1,42 @@
 import dataclasses
+import functools
 import itertools
 from collections import Counter
 from functools import cached_property
+from typing import Literal
 
 from advent_of_code.solution import Solution
+
+
+@functools.cache
+def card_ranking_system(system: Literal[1, 2] = 1):
+    if system == 1:
+        return {
+            Card(figure=card): rank
+            for rank, card in enumerate(
+                "AKQJT98765432"[::-1],
+                1,
+            )
+        }
+    elif system == 2:
+        return {
+            Card2(figure=card): rank
+            for rank, card in enumerate(
+                "AKQT98765432J"[::-1],
+                1,
+            )
+        }
+    else:
+        raise ValueError("ranking system unknown")
 
 
 @dataclasses.dataclass(frozen=True)
 class Card:
     figure: str
+
+    @cached_property
+    def card_ranking(cls):
+        return card_ranking_system(1)
 
     def __lt__(self, other):
         assert isinstance(other, type(self))
@@ -16,31 +44,14 @@ class Card:
 
     @property
     def value(self):
-        return CARD_RANKING[self]
+        return self.card_ranking[self]
 
 
 class Card2(Card):
-    @property
-    def value(self):
-        return NEW_CARD_RANKING[self]
+    @cached_property
+    def card_ranking(cls):
+        return card_ranking_system(2)
 
-
-CARD_RANKING = {
-    Card(card): rank
-    for rank, card in enumerate(
-        "AKQJT98765432"[::-1],
-        1,
-    )
-}
-
-
-NEW_CARD_RANKING = {
-    Card2(card): rank
-    for rank, card in enumerate(
-        "AKQT98765432J"[::-1],
-        1,
-    )
-}
 
 HAND_RANKING = {
     (1, 1, 1, 1, 1): 1,
@@ -75,11 +86,9 @@ class Hand:
         return self.cards == other.cards
 
     def __lt__(self, other: "Hand"):
-        if self.value < other.value:
-            return True
-        elif self.value > other.value:
-            return False
-        return self.cards < other.cards
+        if self.value == other.value:
+            return self.cards < other.cards
+        return self.value.__lt__(other.value)
 
     @cached_property
     def counted_cards(self):
