@@ -127,6 +127,8 @@ def push_solution(year=None, day=None, level=None, solution=None):
         print(f"your answer was {solution} and is too high according to the website")
     elif "That's not the right answer; your answer is too low." in content_response:
         print(f"your answer was {solution} and is too low according to the website")
+    elif "You don't seem to be solving the right level.  Did you already complete it?" in content_response:
+        print("you probably already answered that, don’t make unnecessary request to the server please")
     else:
         print("<================ Unhandled response ===============>")
         print(content_response)
