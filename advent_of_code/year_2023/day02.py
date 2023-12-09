@@ -35,7 +35,10 @@ class Game:
         return cls(id=game_id, samples=samples)
 
     def is_possible(self, max_red=12, max_green=13, max_blue=14) -> bool:
-        return all(g.red <= max_red and g.green <= max_green and g.blue <= max_blue for g in self.samples)
+        return all(
+            g.red <= max_red and g.green <= max_green and g.blue <= max_blue
+            for g in self.samples
+        )
 
     @property
     def minimum_sample(self):
@@ -52,7 +55,11 @@ class Day02(Solution):
         return [Game.parse(line) for line in self.lines]
 
     def solution1(self):
-        return sum(g.id for g in self.parsed if g.is_possible(max_red=12, max_green=13, max_blue=14))
+        return sum(
+            g.id
+            for g in self.parsed
+            if g.is_possible(max_red=12, max_green=13, max_blue=14)
+        )
 
     def solution2(self):
         return sum(g.minimum_sample.power for g in self.parsed)

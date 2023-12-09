@@ -46,7 +46,9 @@ def munch_data(payload: str) -> list[tuple[list, list]]:
 
 
 def day_1_first_puzzle(payload):
-    return sum(k for k, (a, b) in enumerate(munch_data(payload), 1) if compare(a, b) == LT)
+    return sum(
+        k for k, (a, b) in enumerate(munch_data(payload), 1) if compare(a, b) == LT
+    )
 
 
 def day_1_second_puzzle(payload):

@@ -115,7 +115,10 @@ def push_solution(year=None, day=None, level=None, solution=None):
         f"solution for day {day=}, {year=} at {level=} submitted successfully with status HTTP {response.code=}",
     )
     content_response = response.read().decode()
-    if "you have to wait after submitting an answer before trying again" in content_response:
+    if (
+        "you have to wait after submitting an answer before trying again"
+        in content_response
+    ):
         print("please wait before resubmitting")
     elif "That's the right answer!" in content_response:
         print(f"You seem to have found the correct answer to {level=}, {day=}, {year=}")
@@ -127,8 +130,13 @@ def push_solution(year=None, day=None, level=None, solution=None):
         print(f"your answer was {solution} and is too high according to the website")
     elif "That's not the right answer; your answer is too low." in content_response:
         print(f"your answer was {solution} and is too low according to the website")
-    elif "You don't seem to be solving the right level.  Did you already complete it?" in content_response:
-        print("you probably already answered that, don’t make unnecessary request to the server please")
+    elif (
+        "You don't seem to be solving the right level.  Did you already complete it?"
+        in content_response
+    ):
+        print(
+            "you probably already answered that, don’t make unnecessary request to the server please"
+        )
     else:
         print("<================ Unhandled response ===============>")
         print(content_response)

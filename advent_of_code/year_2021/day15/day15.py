@@ -93,7 +93,8 @@ def astar(input_mat):
         if current == (input_mat.MAX_X, input_mat.MAX_Y):
             print("bingo")
             print(
-                sum(input_mat(*p) for p in reconstruct(trace, current)) - input_mat(0, 0),
+                sum(input_mat(*p) for p in reconstruct(trace, current))
+                - input_mat(0, 0),
             )
             return
         del to_visit[current]

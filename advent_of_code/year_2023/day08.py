@@ -1,7 +1,7 @@
 import dataclasses
 import functools
 import itertools
-from typing import TypeAlias, Callable
+from typing import Callable, TypeAlias
 
 from advent_of_code.solution import Solution
 
@@ -30,6 +30,7 @@ class Left:
 
 class Right:
     pass
+
 
 @dataclasses.dataclass(frozen=True)
 class Node:
@@ -71,10 +72,7 @@ class Game:
 
     def find_nb_steps(self, start: Node, condition: Callable[[Node], bool]) -> int:
         position = start
-        for (step, direction) in enumerate(
-            itertools.cycle(self.directions),
-            1
-        ):
+        for step, direction in enumerate(itertools.cycle(self.directions), 1):
             position = self.next_node(position, direction)
             if condition(position):
                 return step
@@ -86,14 +84,14 @@ class Day08(Solution):
             directions=[direction_factory(c) for c in self.lines[0]],
             tree={
                 n: (l, r)
-                for (n, l, r) in (
-                    Game.parse_row(line) for line in self.lines[2:]
-                )
-            }
+                for (n, l, r) in (Game.parse_row(line) for line in self.lines[2:])
+            },
         )
 
     def solution1(self):
-        return self.parsed.find_nb_steps(start=Node("AAA"), condition=lambda n: n.label == "ZZZ")
+        return self.parsed.find_nb_steps(
+            start=Node("AAA"), condition=lambda n: n.label == "ZZZ"
+        )
 
     def solution2(self):
         game: Game = self.parsed
@@ -105,7 +103,7 @@ class Day08(Solution):
         factors = set()
         for st in required_steps:
             factors.update(prime_factors(st))
-        return functools.reduce(lambda x, y: x*y, factors)
+        return functools.reduce(lambda x, y: x * y, factors)
 
 
 class Day08Test(Day08):
