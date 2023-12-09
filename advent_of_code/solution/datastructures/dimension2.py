@@ -1,8 +1,7 @@
-import abc
-import dataclasses
-import pathlib
 from functools import cached_property
 from typing import Callable, Iterable, NamedTuple, TypeVar
+
+T = TypeVar("T")
 
 
 class Coordinate(NamedTuple):
@@ -10,9 +9,8 @@ class Coordinate(NamedTuple):
     y: int
 
 
-T = TypeVar("T")
-
-ParseResult = TypeVar("ParseResult")
+def default_wrapper(*, value: str, _: Coordinate):
+    return value
 
 
 class BaseMatrix(list[list[T]]):
@@ -39,7 +37,8 @@ class BaseMatrix(list[list[T]]):
 
     def neighbours(self, c: Coordinate, diagonal=True):
         return [
-            self.get(neighbour_coordinate) for neighbour_coordinate in self.neighbour_coordinates(c, diagonal=diagonal)
+            self.get(neighbour_coordinate)
+            for neighbour_coordinate in self.neighbour_coordinates(c, diagonal=diagonal)
         ]
 
     def neighbour_coordinates(self, c: Coordinate, diagonal=True) -> list[Coordinate]:
@@ -66,59 +65,17 @@ class BaseMatrix(list[list[T]]):
             if self.in_map(c)
         ]
 
-
-def default_wrapper(*, value: str, _: Coordinate):
-    return value
-
-
-@dataclasses.dataclass(frozen=True)
-class Solution:
-    """A base class to inherit from when implementing solutions."""
-
-    day: int
-    year: int
-
-    @cached_property
-    def data(self):
-        with open(
-            pathlib.Path(__file__).parent / f"year_{self.year}" / "data" / f"day{self.day:02d}.txt",
-        ) as f:
-            data = f.read()
-        return data
-
-    @cached_property
-    def lines(self):
-        return [line.rstrip() for line in self.data.splitlines()]
-
-    @cached_property
-    def line(self):
-        """Useful if the input contains a single line."""
-        (line,) = self.lines
-        return line
-
-    @abc.abstractmethod
-    def solution1(self):
-        pass
-
-    @abc.abstractmethod
-    def solution2(self):
-        pass
-
-    def parse(self) -> ParseResult:
-        raise NotImplementedError()
-
+    @staticmethod
     def parse_matrix(
-        self,
         *,
+        data: list[str] = None,
         start=0,
         end=None,
         wrapper: Callable[[str, Coordinate], T] = default_wrapper,
-    ) -> BaseMatrix[T]:
-        slice_ = self.lines[start:end]
-        output = [[wrapper(char, Coordinate(x=x, y=y)) for x, char in enumerate(row)] for y, row in enumerate(slice_)]
+    ) -> "BaseMatrix":
+        slice_ = data[start:end]
+        output = [
+            [wrapper(char, Coordinate(x=x, y=y)) for x, char in enumerate(row)]
+            for y, row in enumerate(slice_)
+        ]
         return BaseMatrix[T](output)
-
-    @cached_property
-    def parsed(self) -> ParseResult:
-        """It is not mandatory to implement this function, but it helps for standardization"""
-        return self.parse()
