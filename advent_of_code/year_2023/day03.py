@@ -6,10 +6,6 @@ from advent_of_code.solution import Solution
 from advent_of_code.solution.datastructures.dimension2 import BaseMatrix, Coordinate
 
 
-class EngineSchematic(BaseMatrix):
-    pass
-
-
 @dataclasses.dataclass
 class CharValue:
     value: str
@@ -17,6 +13,10 @@ class CharValue:
 
     def isdigit(self):
         return self.value.isdigit()
+
+
+class EngineSchematic(BaseMatrix[CharValue]):
+    pass
 
 
 class Day03(Solution):
@@ -32,7 +32,7 @@ class Day03(Solution):
     @cached_property
     def part_numbers(self) -> list[tuple[CharValue, ...]]:
         all_numbers = []
-        for row in self.parsed:
+        for row in self.parsed.rows:
             current_number = ()
             for c in row:
                 if current_number and not c.isdigit():
@@ -44,9 +44,9 @@ class Day03(Solution):
                 all_numbers.append(current_number)
         return all_numbers
 
-    def parse(self) -> EngineSchematic[list[CharValue]]:
+    def parse(self) -> EngineSchematic:
         data = EngineSchematic(
-            BaseMatrix.parse_matrix(data=self.lines, wrapper=CharValue)
+            content=BaseMatrix.parse_matrix(data=self.lines, wrapper=CharValue).content
         )
         return data
 
@@ -55,7 +55,7 @@ class Day03(Solution):
         for number in self.part_numbers:
             for digit in number:
                 if any(
-                    c.value in self.symbols
+                    self.parsed[c].value in self.symbols
                     for c in self.parsed.neighbours(digit.coordinate)
                 ):
                     output += int("".join(c.value for c in number))
@@ -72,8 +72,8 @@ class Day03(Solution):
             )
             for digit in number:
                 for c in self.parsed.neighbours(digit.coordinate):
-                    if c.value == "*":
-                        result[c.coordinate].add(number_tuple)
+                    if self.parsed[c].value == "*":
+                        result[self.parsed[c].coordinate].add(number_tuple)
         for star in result:
             if len(result[star]) == 2:
                 (n1, coordinates), (n2, coordinates) = result[star]

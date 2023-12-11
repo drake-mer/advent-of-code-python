@@ -1,11 +1,9 @@
 import dataclasses
-from typing import Generic, TypeAlias, Union
+from typing import Generic, TypeAlias, Union, Self
 
 from advent_of_code.solution import Solution
 from advent_of_code.solution.datastructures.dimension3 import Coordinate as Coord3D
-from advent_of_code.solution.datastructures.dimension3 import Map3D
 from advent_of_code.solution.datastructures.dimension4 import Coordinate as Coord4D
-from advent_of_code.solution.datastructures.dimension4 import Map4D
 from advent_of_code.solution.datastructures.dimensionN import C, GenericMap, T
 
 
@@ -34,8 +32,8 @@ def pixel_factory(c: str) -> Pixel:
 class Game(Generic[C, T]):
     space: GenericMap[C, T]
 
-    def cycle(self) -> "Game":
-        new_space = GenericMap(default=Empty(), content=({} | self.space.content))
+    def cycle(self) -> Self:
+        new_space = GenericMap[C, T](default=Empty(), content=({} | self.space.content))
         for pix_coordinate in self.space:
             for neighbour in pix_coordinate.neighbours():
                 if neighbour not in new_space:
@@ -68,6 +66,8 @@ class Game(Generic[C, T]):
 
 
 class Day17(Solution):
+    tags = ("map", "3D", "4D", "geometry", "inflate", "pixel")
+
     def parse_4D(self) -> Game[Coord4D, Pixel]:
         game = GenericMap[Coord4D, Pixel](default=Empty())
         for y, row in enumerate(self.lines):
@@ -85,16 +85,13 @@ class Day17(Solution):
     def solution1(self):
         game = self.parsed
         for k in range(6):
-            print(game.lit_pixels)
             game = game.cycle()
         return game.lit_pixels
 
     def solution2(self):
         game = self.parse_4D()
         for k in range(6):
-            print(game.lit_pixels)
             game = game.cycle()
-
         return game.lit_pixels
 
 

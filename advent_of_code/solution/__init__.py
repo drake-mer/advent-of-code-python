@@ -2,13 +2,13 @@ import abc
 import dataclasses
 import pathlib
 from functools import cached_property
-from typing import Callable, TypeVar
+from typing import Callable, TypeVar, Generic
 
 ParseResult = TypeVar("ParseResult")
 
 
 @dataclasses.dataclass(frozen=True)
-class Solution:
+class Solution(Generic[ParseResult]):
     """A base class to inherit from when implementing solutions."""
 
     day: int

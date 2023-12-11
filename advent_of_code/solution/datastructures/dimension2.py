@@ -1,6 +1,11 @@
+import collections
+import dataclasses
 from functools import cached_property
-from typing import Callable, Iterable, NamedTuple, TypeVar
+from typing import Callable, Iterable, NamedTuple, TypeVar, Generic
 
+from .dimensionN import GenericMap
+
+C = TypeVar("C")
 T = TypeVar("T")
 
 
@@ -8,11 +13,14 @@ class Coordinate(NamedTuple):
     x: int
     y: int
 
+    def __add__(self, other):
+        return Coordinate(self.x + other.x, self.y + other.y)
+
     def __sub__(self, other):
         return Coordinate(self.x - other.x, self.y - other.y)
 
-    def __add__(self, other):
-        return Coordinate(self.x + other.x, self.y + other.y)
+    def rotate_pi_over_2(self):
+        return Coordinate(self.y, -self.x)
 
     def manhattan(self, other: "Coordinate"):
         x, y = self
@@ -24,52 +32,57 @@ def default_wrapper(*, value: str, _: Coordinate):
     return value
 
 
-class BaseMatrix(list[list[T]]):
-    def get(self, c: Coordinate) -> T:
+@dataclasses.dataclass
+class BaseMatrix(Generic[T]):
+    content: list[list[T]]
+
+    def __getitem__(self, c: Coordinate) -> T:
         if not self.in_map(c):
             raise ValueError(f"Coordinate {c} seems out of bound for matrix")
-        return self[c.y][c.x]
+        return self.content[c.y][c.x]
 
-    def display(self):
-        return "\n".join("".join([str(c) for c in row]) for row in self.rows)
-
-    @property
-    def rows(self):
-        for row in self:
-            yield row
+    def pretty_print(self, translate_function: Callable[[T], str]) -> str:
+        output = []
+        for y, row in enumerate(self.rows):
+            new_row = "".join(translate_function(c) for c in row)
+            output.append(new_row)
+        return "\n".join(output)
 
     def all_values(self) -> Iterable[T]:
-        for row in self:
+        for row in self.rows:
             for pixel in row:
                 yield pixel
 
+    def find(self, value: T):
+        for x in range(self.width):
+            for y in range(self.height):
+                if self[c := Coordinate(x, y)] == value:
+                    return c
+
     @cached_property
     def width(self):
-        return len(self[0]) if self else 0
+        return len(self.content[0]) if self else 0
 
     @cached_property
     def height(self):
-        return len(self) if self else 0
+        return len(self.content) if self else 0
+
+    @property
+    def rows(self) -> list[list[T]]:
+        return list(self.content)
 
     def in_map(self, c: Coordinate):
         return 0 <= c.x < self.width and 0 <= c.y < self.height
 
-    def neighbours(self, c: Coordinate, diagonal=True):
+    def neighbours(self, c: Coordinate, diagonal=True) -> Iterable[Coordinate]:
         return [
-            self.get(neighbour_coordinate) for neighbour_coordinate in self.neighbour_coordinates(c, diagonal=diagonal)
+            neighbour_coordinate
+            for neighbour_coordinate in self.neighbour_coordinates(c, diagonal=diagonal)
         ]
 
     def neighbour_coordinates(self, c: Coordinate, diagonal=True) -> list[Coordinate]:
         """Assumption is that the matrix is of rectangular shape"""
         y, x = c.y, c.x
-
-        def diagonal_neighbours(y, x):
-            return [
-                Coordinate(y=y - 1, x=x - 1),
-                Coordinate(y=y - 1, x=x + 1),
-                Coordinate(y=y + 1, x=x - 1),
-                Coordinate(y=y + 1, x=x + 1),
-            ]
 
         return [
             c
@@ -78,13 +91,49 @@ class BaseMatrix(list[list[T]]):
                 Coordinate(y=y + 1, x=x),
                 Coordinate(y=y, x=x - 1),
                 Coordinate(y=y, x=x + 1),
-                *(diagonal_neighbours(y, x) if diagonal else []),
+                *([
+                    Coordinate(y=y - 1, x=x - 1),
+                    Coordinate(y=y - 1, x=x + 1),
+                    Coordinate(y=y + 1, x=x - 1),
+                    Coordinate(y=y + 1, x=x + 1),
+                ] if diagonal else []),
             ]
             if self.in_map(c)
         ]
 
-    @staticmethod
+    def flood_fill(
+        self,
+        coordinate: Coordinate,
+        accumulator: set[Coordinate] = None,
+        is_boundary: Callable[[Coordinate], bool] = None,
+        diagonal: bool = False  # should the flood fill use diagonal (most of the time it's not necessary)
+    ) -> set[Coordinate]:
+        if is_boundary is None:
+            is_boundary = self.in_map
+
+        if accumulator is None:
+            accumulator = set()
+
+        if is_boundary(coordinate):
+            return accumulator
+
+        accumulator.add(coordinate)
+        pixels_to_check = set(
+            c for c in self.neighbours(coordinate, diagonal=diagonal)
+            if not is_boundary(c) and c not in accumulator
+        )
+        while pixels_to_check:
+            next_pixel = pixels_to_check.pop()
+            accumulator.add(next_pixel)
+            pixels_to_check.update(
+                c for c in self.neighbours(next_pixel, diagonal=diagonal)
+                if not is_boundary(c) and c not in accumulator
+            )
+        return accumulator
+
+    @classmethod
     def parse_matrix(
+        cls,
         *,
         data: list[str] = None,
         start=0,
@@ -92,5 +141,12 @@ class BaseMatrix(list[list[T]]):
         wrapper: Callable[[str, Coordinate], T] = default_wrapper,
     ) -> "BaseMatrix":
         slice_ = data[start:end]
-        output = [[wrapper(char, Coordinate(x=x, y=y)) for x, char in enumerate(row)] for y, row in enumerate(slice_)]
-        return BaseMatrix[T](output)
+        output = [
+            [wrapper(char, Coordinate(x=x, y=y)) for x, char in enumerate(row)]
+            for y, row in enumerate(slice_)
+        ]
+        return cls(content=output)
+
+
+class Map2D(GenericMap[Coordinate, T]):
+    pass
