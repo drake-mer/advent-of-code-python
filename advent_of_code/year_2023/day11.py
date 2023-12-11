@@ -86,15 +86,15 @@ class Day11(Solution):
     def solution1(self, offset=1):
         total = 0
         for g1, g2 in itertools.product(self.game.galaxies, self.game.galaxies):
-            if g1.id < g2.id:
-                x0, x1 = sorted((g1.coordinates.x, g2.coordinates.x))
-                y0, y1 = sorted((g1.coordinates.y, g2.coordinates.y))
-                total += (
-                    g1.coordinates.manhattan(g2.coordinates)
-                    + offset * sum(True for row in self.game.empty_rows if y0 < row < y1)
-                    + offset * sum(True for col in self.game.empty_cols if x0 < col < x1)
-                )
-
+            if g1.id >= g2.id:
+                continue
+            x0, x1 = sorted((g1.coordinates.x, g2.coordinates.x))
+            y0, y1 = sorted((g1.coordinates.y, g2.coordinates.y))
+            total += (
+                g1.coordinates.manhattan(g2.coordinates)
+                + offset * sum(True for row in self.game.empty_rows if y0 < row < y1)
+                + offset * sum(True for col in self.game.empty_cols if x0 < col < x1)
+            )
         return total
 
     def solution2(self):
