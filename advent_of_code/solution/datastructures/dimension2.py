@@ -8,6 +8,17 @@ class Coordinate(NamedTuple):
     x: int
     y: int
 
+    def __sub__(self, other):
+        return Coordinate(self.x - other.x, self.y - other.y)
+
+    def __add__(self, other):
+        return Coordinate(self.x + other.x, self.y + other.y)
+
+    def manhattan(self, other: "Coordinate"):
+        x, y = self
+        ox, oy = other
+        return abs(ox - x) + abs(oy - y)
+
 
 def default_wrapper(*, value: str, _: Coordinate):
     return value
@@ -18,6 +29,14 @@ class BaseMatrix(list[list[T]]):
         if not self.in_map(c):
             raise ValueError(f"Coordinate {c} seems out of bound for matrix")
         return self[c.y][c.x]
+
+    def display(self):
+        return "\n".join("".join([str(c) for c in row]) for row in self.rows)
+
+    @property
+    def rows(self):
+        for row in self:
+            yield row
 
     def all_values(self) -> Iterable[T]:
         for row in self:
@@ -37,8 +56,7 @@ class BaseMatrix(list[list[T]]):
 
     def neighbours(self, c: Coordinate, diagonal=True):
         return [
-            self.get(neighbour_coordinate)
-            for neighbour_coordinate in self.neighbour_coordinates(c, diagonal=diagonal)
+            self.get(neighbour_coordinate) for neighbour_coordinate in self.neighbour_coordinates(c, diagonal=diagonal)
         ]
 
     def neighbour_coordinates(self, c: Coordinate, diagonal=True) -> list[Coordinate]:
@@ -74,8 +92,5 @@ class BaseMatrix(list[list[T]]):
         wrapper: Callable[[str, Coordinate], T] = default_wrapper,
     ) -> "BaseMatrix":
         slice_ = data[start:end]
-        output = [
-            [wrapper(char, Coordinate(x=x, y=y)) for x, char in enumerate(row)]
-            for y, row in enumerate(slice_)
-        ]
+        output = [[wrapper(char, Coordinate(x=x, y=y)) for x, char in enumerate(row)] for y, row in enumerate(slice_)]
         return BaseMatrix[T](output)
