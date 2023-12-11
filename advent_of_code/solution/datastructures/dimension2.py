@@ -27,6 +27,9 @@ class Coordinate(NamedTuple):
         ox, oy = other
         return abs(ox - x) + abs(oy - y)
 
+    def scalar(self, other: "Coordinate"):
+        return self.x * other.x + self.y * other.y
+
 
 def default_wrapper(*, value: str, _: Coordinate):
     return value
