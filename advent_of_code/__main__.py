@@ -48,10 +48,16 @@ parser.add_argument(
     type=int,
 )
 parser.add_argument(
-    "-",
+    "-t",
     "--test",
     help="Run the class DayXXTest solution1 and solution2 methods (useful for test examples)",
     action="store_true",
+)
+parser.add_argument(
+    "-n",
+    "--new-tab",
+    help="open a new browser page on the puzzle",
+    action="store_true"
 )
 args = parser.parse_args()
 
@@ -171,7 +177,7 @@ def push_solution(year=None, day=None, level=None, solution=None):
         print(content_response)
 
 
-def prepare_puzzle_data_and_layout(year: int, day: int, refresh_input=False):
+def prepare_puzzle_data_and_layout(year: int, day: int, refresh_input=False, new_tab=False):
     if not (year_path := YearFolder(year)).exists():
         print("year folder does not exist, creating it")
         os.mkdir(year_path)
@@ -200,10 +206,10 @@ class {Day(day).title()}(Solution):
     if not (data_path := (YearFolder(year) / "data")).exists():
         print("data folder does not exist, creating it")
         os.mkdir(data_path)
+    if (not (YearFolder(year) / "data" / DayInput(day)).exists()) or new_tab:
+        webbrowser.open(f"https://adventofcode.com/{year}/day/{day}")
     if not (YearFolder(year) / "data" / DayInput(day)).exists() or refresh_input:
         download_input_data(year=year, day=day)
-
-    webbrowser.open(f"https://adventofcode.com/{year}/day/{day}")
 
 
 def run_solution(year: int, day: int, submit: Literal[0, 1, 2] = 0, test: bool = False):
@@ -226,4 +232,4 @@ def run_solution(year: int, day: int, submit: Literal[0, 1, 2] = 0, test: bool =
 
 
 prepare_puzzle_data_and_layout(args.year, args.day, args.download)
-run_solution(args.year, args.day, args.submit, args.test)
+run_solution(args.year, args.day, args.submit, args.test, args.new_tab)
