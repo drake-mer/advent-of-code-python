@@ -19,17 +19,10 @@ def cache(f):
 @cache
 def recurse(remains: str, current_group: int = 0, groups: tuple[int, ...] = ()) -> int:
     if not remains:
-        if (current_group,) == groups:
-            return 1
-        elif current_group == 0 and not groups:
-            return 1
-        else:
-            return 0
+        return (current_group,) == groups or (current_group == 0 and not groups)
 
-    if not groups and current_group == 0 and remains.count("#") == 0:
-        return 1
-    elif not groups and (current_group or remains.count("#") != 0):
-        return 0
+    if not groups:
+        return current_group == 0 and remains.count("#") == 0
 
     c, *remains = remains
     wished_group, *other_groups = groups
