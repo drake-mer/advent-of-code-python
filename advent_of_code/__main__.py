@@ -96,6 +96,35 @@ def get_token():
                 return
 
 
+def download_input_data(year: int, day: int):
+    if not (session_token := get_token()):
+        print("WARNING: could not download puzzle data, token is missing.")
+        print(
+            "Try putting AOC_TOKEN (session cookie value) into your environment or a '.env' file",
+        )
+        return
+    request = urllib.request.Request(
+        method="GET",
+        headers={
+            "cookie": f"session={session_token}",
+        },
+        url=f"https://adventofcode.com/{year}/day/{day}/input",
+    )
+    response = urllib.request.urlopen(request)
+    if response.code != 200:
+        print(f"response from server has status code {response.code}")
+        print(f"response content: {response.read()}")
+        print("you might need to refresh your token")
+        sys.exit(1)
+    content = response.read()
+    response.close()
+    with open(YearFolder(year) / "data" / DayInput(day), "w") as f:
+        f.write(content.decode())
+        print(
+            "Successfully downloaded puzzle input, you can start solving the puzzle...",
+        )
+
+
 def push_solution(year=None, day=None, level=None, solution=None):
     if not (solution and year and day and level):
         raise ValueError("you must specify valid input parameters")
@@ -150,7 +179,9 @@ def prepare_puzzle_data_and_layout(year: int, day: int, refresh_input=False):
     if not (year_path / "__init__.py").exists():
         with open(year_path / "__init__.py", "w") as f:
             f.write(f'"""AOC year={year}"""')
-    if not (year_path / DayModule(day)).exists():
+    try:
+        importlib.import_module(f"advent_of_code.year_{year}.{Day(day)}")
+    except ImportError:
         with open(year_path / DayModule(day), "w") as f:
             f.write(
                 f"""
@@ -169,35 +200,9 @@ class {Day(day).title()}(Solution):
     if not (data_path := (YearFolder(year) / "data")).exists():
         print("data folder does not exist, creating it")
         os.mkdir(data_path)
-    if (YearFolder(year) / "data" / DayInput(day)).exists() and not refresh_input:
-        print("data already downloaded, skipping")
-        return
-    if not (session_token := get_token()):
-        print("WARNING: could not download puzzle data, token is missing.")
-        print(
-            "Try putting AOC_TOKEN (session cookie value) into your environment or a '.env' file",
-        )
-        return
-    request = urllib.request.Request(
-        method="GET",
-        headers={
-            "cookie": f"session={session_token}",
-        },
-        url=f"https://adventofcode.com/{year}/day/{day}/input",
-    )
-    response = urllib.request.urlopen(request)
-    if response.code != 200:
-        print(f"response from server has status code {response.code}")
-        print(f"response content: {response.read()}")
-        print("you might need to refresh your token")
-        sys.exit(1)
-    content = response.read()
-    response.close()
-    with open(YearFolder(year) / "data" / DayInput(day), "w") as f:
-        f.write(content.decode())
-        print(
-            "Successfully downloaded puzzle input, you can start solving the puzzle...",
-        )
+    if not (YearFolder(year) / "data" / DayInput(day)).exists() or refresh_input:
+        download_input_data(year=year, day=day)
+
     webbrowser.open(f"https://adventofcode.com/{year}/day/{day}")
 
 
