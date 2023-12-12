@@ -16,9 +16,7 @@ class Sequence:
 
     @property
     def next_sequence(self) -> "Sequence":
-        return Sequence(
-            sequence=[(v - k) for k, v in zip(self.sequence, self.sequence[1:])]
-        )
+        return Sequence(sequence=[(v - k) for k, v in zip(self.sequence, self.sequence[1:])])
 
 
 def all_sequences(seq: Sequence) -> Iterable[Sequence]:
@@ -35,9 +33,7 @@ def extrapolate(seq: Sequence) -> int:
             assert all(s == 0 for s in sequence.sequence)
             sequence.sequence.append(0)
         else:
-            sequence.sequence.append(
-                sequence_list[-pos].sequence[-1] + sequence.sequence[-1]
-            )
+            sequence.sequence.append(sequence_list[-pos].sequence[-1] + sequence.sequence[-1])
     else:
         return sequence_list[0].sequence[-1]
 

@@ -59,9 +59,7 @@ class Game:
 
     @functools.cached_property
     def possible_tickets(self):
-        return [
-            ticket for ticket in self.nearby_tickets if not self.invalid_ticket(ticket)
-        ]
+        return [ticket for ticket in self.nearby_tickets if not self.invalid_ticket(ticket)]
 
     def possible_arrangements(self):
         print("start for ticket")
@@ -82,18 +80,14 @@ class Game:
         if categories is None:
             categories = list(self.ranges)
         possible_categories = list(
-            cat
-            for cat in categories
-            if all(cat.number_allowed(t[position]) for t in self.nearby_tickets)
+            cat for cat in categories if all(cat.number_allowed(t[position]) for t in self.nearby_tickets)
         )
         if not possible_categories and position < 20:
             return
         for cat in possible_categories:
             new_categories = list(set(categories) - {cat})
             assert len(new_categories) == len(self.ticket) - position - 1
-            yield from self.iter_categories(
-                position=position + 1, categories=new_categories, word=(*word, cat.name)
-            )
+            yield from self.iter_categories(position=position + 1, categories=new_categories, word=(*word, cat.name))
 
 
 class Day16(Solution):
@@ -105,9 +99,7 @@ class Day16(Solution):
             if not line:
                 break
             name, ranges = line.split(": ")
-            all_ranges = tuple(
-                [Range(*map(int, ran.split("-"))) for ran in ranges.split(" or ")]
-            )
+            all_ranges = tuple([Range(*map(int, ran.split("-"))) for ran in ranges.split(" or ")])
             acc_ranges.add(Category(name, all_ranges))
         for line in iterator:
             if line == "your ticket:":
@@ -124,12 +116,7 @@ class Day16(Solution):
 
     def solution1(self):
         game: Game = self.parsed
-        return sum(
-            n
-            for ticket in game.nearby_tickets
-            for n in ticket
-            if game.invalid_number(n)
-        )
+        return sum(n for ticket in game.nearby_tickets for n in ticket if game.invalid_number(n))
 
     def solution2(self):
         game: Game = self.parsed
@@ -140,9 +127,7 @@ class Day16(Solution):
                 k: [cat for cat in game.ranges if all(map(cat.number_allowed, numbers))]
                 for k, numbers in enumerate(number_set)
             }
-            marked = {
-                k: cats[0] for k, cats in naive_possibilities.items() if len(cats) == 1
-            }
+            marked = {k: cats[0] for k, cats in naive_possibilities.items() if len(cats) == 1}
             while naive_possibilities:
                 for k in marked:
                     naive_possibilities.pop(k, None)
@@ -152,13 +137,7 @@ class Day16(Solution):
                             cat_list.remove(cat)
                         except ValueError:
                             pass
-                marked.update(
-                    {
-                        k: cats[0]
-                        for k, cats in naive_possibilities.items()
-                        if len(cats) == 1
-                    }
-                )
+                marked.update({k: cats[0] for k, cats in naive_possibilities.items() if len(cats) == 1})
             return marked
 
         category_mapping = reduce_cats(game)

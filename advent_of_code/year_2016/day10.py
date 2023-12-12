@@ -170,38 +170,18 @@ class Day10(Solution):
 
     def run_sm(self):
         sm = StateMachine()
-        set_values = list(
-            instruction
-            for instruction in self.parsed
-            if isinstance(instruction, SetValue)
-        )
-        distribute = list(
-            instruction
-            for instruction in self.parsed
-            if isinstance(instruction, MoveValue)
-        )
+        set_values = list(instruction for instruction in self.parsed if isinstance(instruction, SetValue))
+        distribute = list(instruction for instruction in self.parsed if isinstance(instruction, MoveValue))
         for instruction in set_values:
             sm.run(instruction)
 
-        playable = [
-            instruction for instruction in distribute if sm[instruction.sender].full
-        ]
+        playable = [instruction for instruction in distribute if sm[instruction.sender].full]
         while distribute:
-            distribute = [
-                instruction
-                for instruction in distribute
-                if not sm[instruction.sender].full
-            ]
+            distribute = [instruction for instruction in distribute if not sm[instruction.sender].full]
             for instruction in playable:
                 sm.run(instruction)
-            playable = [
-                instruction for instruction in distribute if sm[instruction.sender].full
-            ]
-            distribute = [
-                instruction
-                for instruction in distribute
-                if not sm[instruction.sender].full
-            ]
+            playable = [instruction for instruction in distribute if sm[instruction.sender].full]
+            distribute = [instruction for instruction in distribute if not sm[instruction.sender].full]
         return sm
 
     def solution1(self):

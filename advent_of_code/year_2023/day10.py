@@ -29,7 +29,8 @@ def format_char(c: str):
 
 
 AsciiMapping = {
-    k: format_char(v) for k, v in {
+    k: format_char(v)
+    for k, v in {
         Tile.SE: "\u250C",
         Tile.SW: "\u2510",
         Tile.NS: "\u2502",
@@ -37,7 +38,7 @@ AsciiMapping = {
         Tile.NE: "\u2514",
         Tile.NW: "\u2518",
         Tile.S: "\u2749",
-        Tile.G: "\ue25A2"
+        Tile.G: "\ue25A2",
     }.items()
 }
 
@@ -65,7 +66,7 @@ class Pixel:
     def on_edge(self, g: "HuntingGround") -> bool:
         h, w = g.height, g.width
         x, y = self.coordinate
-        return x == (w-1) or x == 0 or y == (h - 1) or y == 0
+        return x == (w - 1) or x == 0 or y == (h - 1) or y == 0
 
     def on_path(self, g: "HuntingGround") -> bool:
         return self in g.cached_path
@@ -111,17 +112,15 @@ class HuntingGround(BaseMatrix[Pixel]):
         distance = 0
         starting_point = self[self.find(Pixel(Tile.S))]
         possible_starts = [
-            self[c] for c in self.neighbours(starting_point.coordinate, diagonal=False)
+            self[c]
+            for c in self.neighbours(starting_point.coordinate, diagonal=False)
             if self[c].is_pipe and any([n == starting_point.coordinate for n in self[c].connecting])
         ]
         visited_: dict[Pixel, int] = dict()
         visited_[starting_point.update_distance(0)] = distance
         to_visit: collections.deque[Pixel] = collections.deque()
         to_visit.extend(
-            [
-                square.update_distance(distance + 1)
-                for square in possible_starts if square not in visited_
-            ][:1]
+            [square.update_distance(distance + 1) for square in possible_starts if square not in visited_][:1]
         )
         while to_visit:
             next_node = to_visit.popleft()
@@ -149,9 +148,7 @@ class Day10(Solution):
         return game.cached_path
 
     def solution1(self):
-        full_path_length = max(
-            self.path().values()
-        )
+        full_path_length = max(self.path().values())
         return full_path_length // 2 + full_path_length % 2
 
     def solution2(self):
@@ -166,10 +163,13 @@ class Day10(Solution):
         # edge case in my computation of the derivatives. Here matplotlib is doing the heavy lifting
         # I'll just leave it at that.
         import matplotlib
+
         polygon = matplotlib.path.Path(nodes)
         nodes = set(nodes)
         return sum(
-            1 for y in range(1, game.height) for x in range(1, game.width)
+            1
+            for y in range(1, game.height)
+            for x in range(1, game.width)
             if (c := (y, x)) not in nodes and polygon.contains_point(c)
         )
 
@@ -187,4 +187,3 @@ L---JF-JLJ.||-FJLJJ7
 7-L-JL7||F7|L7F-7F7|
 L.L7LFJ|||||FJL7||LJ
 L7JLJL-JLJLJL--JLJ.L"""
-

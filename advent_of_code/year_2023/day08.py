@@ -82,24 +82,16 @@ class Day08(Solution):
     def parse(self):
         return Game(
             directions=[direction_factory(c) for c in self.lines[0]],
-            tree={
-                n: (l, r)
-                for (n, l, r) in (Game.parse_row(line) for line in self.lines[2:])
-            },
+            tree={n: (l, r) for (n, l, r) in (Game.parse_row(line) for line in self.lines[2:])},
         )
 
     def solution1(self):
-        return self.parsed.find_nb_steps(
-            start=Node("AAA"), condition=lambda n: n.label == "ZZZ"
-        )
+        return self.parsed.find_nb_steps(start=Node("AAA"), condition=lambda n: n.label == "ZZZ")
 
     def solution2(self):
         game: Game = self.parsed
         positions = [n for n in game.tree if n.label.endswith("A")]
-        required_steps = [
-            game.find_nb_steps(start, condition=lambda n: n.label.endswith("Z"))
-            for start in positions
-        ]
+        required_steps = [game.find_nb_steps(start, condition=lambda n: n.label.endswith("Z")) for start in positions]
         factors = set()
         for st in required_steps:
             factors.update(prime_factors(st))

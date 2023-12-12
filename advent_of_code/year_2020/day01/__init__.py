@@ -3,11 +3,9 @@ import itertools
 from advent_of_code.solution import Solution
 
 
-
 class Day01(Solution):
     def parse(self):
         return [int(line.strip()) for line in self.lines if line]
-
 
     def solution1(self):
         data = self.parsed
@@ -38,4 +36,3 @@ class Day01Test(Day01):
 675
 1456
 """
-

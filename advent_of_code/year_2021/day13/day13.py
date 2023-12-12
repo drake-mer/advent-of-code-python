@@ -25,9 +25,7 @@ input_data = open("input").read()
 
 def get_input(data: str):
     part_one, part_two = data.split("\n\n")
-    part_one = set(
-        tuple(map(int, line.strip().split(","))) for line in part_one.splitlines()
-    )
+    part_one = set(tuple(map(int, line.strip().split(","))) for line in part_one.splitlines())
     return part_one, list(l.strip().split()[-1] for l in part_two.splitlines())
 
 
@@ -38,10 +36,7 @@ max_y = max(y for (_, y) in p1)
 
 print(max_x, max_y)
 
-data = [
-    ["." if (x, y) not in p1 else "#" for x in range(max_x + 1)]
-    for y in range(max_y + 1)
-]
+data = [["." if (x, y) not in p1 else "#" for x in range(max_x + 1)] for y in range(max_y + 1)]
 
 
 def fold_along_x(data, offset):

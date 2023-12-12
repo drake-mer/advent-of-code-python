@@ -82,10 +82,7 @@ def day_1_second_puzzle(payload):
     return "\n".join(
         Screen(
             [
-                "#"
-                if (pixel % 40)
-                in (state.register - 1, state.register, state.register + 1)
-                else "."
+                "#" if (pixel % 40) in (state.register - 1, state.register, state.register + 1) else "."
                 for pixel, state in enumerate(all_cycles(State(), munch_data(payload)))
                 if pixel < 240
             ],

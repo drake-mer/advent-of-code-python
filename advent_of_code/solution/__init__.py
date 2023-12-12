@@ -17,10 +17,7 @@ class Solution(Generic[ParseResult]):
     @cached_property
     def data(self):
         with open(
-            pathlib.Path(__file__).parent.parent
-            / f"year_{self.year}"
-            / "data"
-            / f"day{self.day:02d}.txt",
+            pathlib.Path(__file__).parent.parent / f"year_{self.year}" / "data" / f"day{self.day:02d}.txt",
         ) as f:
             data = f.read()
         return data

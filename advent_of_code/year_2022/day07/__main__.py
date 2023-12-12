@@ -91,9 +91,7 @@ def tree(data: list[Instruction | Folder | File]):
                             case Folder("/"):
                                 current = root
                             case Folder(_):
-                                if not (
-                                    subfolder := current.get_folder(directory.name)
-                                ):
+                                if not (subfolder := current.get_folder(directory.name)):
                                     raise ValueError
                                 current = subfolder
     return root

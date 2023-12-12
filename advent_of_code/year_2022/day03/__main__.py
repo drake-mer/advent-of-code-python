@@ -21,10 +21,7 @@ def common_element(*args: str) -> str:
 
 
 def munch_data(payload: str):
-    return [
-        (line[: len(line) // 2], line[len(line) // 2 :])
-        for line in payload.splitlines(keepends=False)
-    ]
+    return [(line[: len(line) // 2], line[len(line) // 2 :]) for line in payload.splitlines(keepends=False)]
 
 
 def day_1_first_puzzle(payload):
@@ -33,9 +30,7 @@ def day_1_first_puzzle(payload):
 
 def day_1_second_puzzle(payload):
     all_rucksacks = list(map(lambda x: "".join(x), munch_data(payload)))
-    group_of_three = [
-        all_rucksacks[3 * k : 3 * k + 3] for k in range(len(all_rucksacks) // 3)
-    ]
+    group_of_three = [all_rucksacks[3 * k : 3 * k + 3] for k in range(len(all_rucksacks) // 3)]
     return sum([priority[common_element(*gr)] for gr in group_of_three])
 
 

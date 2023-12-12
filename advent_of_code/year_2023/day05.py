@@ -53,20 +53,14 @@ class Range:
                     length=seed_range.length - intersection.length,
                 ),
             ]
-        elif (
-            intersection.start + intersection.length
-            == seed_range.start + seed_range.length
-        ):
+        elif intersection.start + intersection.length == seed_range.start + seed_range.length:
             return [
                 SeedRange(
                     start=seed_range.start,
                     length=seed_range.length - intersection.length,
                 ),
             ]
-        elif (
-            intersection.start + intersection.length
-            < seed_range.start + seed_range.length
-        ):
+        elif intersection.start + intersection.length < seed_range.start + seed_range.length:
             return [
                 SeedRange(
                     start=seed_range.start,

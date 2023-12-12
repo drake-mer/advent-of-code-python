@@ -22,11 +22,7 @@ class EngineSchematic(BaseMatrix[CharValue]):
 class Day03(Solution):
     @cached_property
     def symbols(self):
-        symbols = set(
-            c.value
-            for c in self.parsed.all_values()
-            if not c.isdigit() and c.value != "."
-        )
+        symbols = set(c.value for c in self.parsed.all_values() if not c.isdigit() and c.value != ".")
         return symbols
 
     @cached_property
@@ -45,19 +41,14 @@ class Day03(Solution):
         return all_numbers
 
     def parse(self) -> EngineSchematic:
-        data = EngineSchematic(
-            content=BaseMatrix.parse_matrix(data=self.lines, wrapper=CharValue).content
-        )
+        data = EngineSchematic(content=BaseMatrix.parse_matrix(data=self.lines, wrapper=CharValue).content)
         return data
 
     def solution1(self):
         output = 0
         for number in self.part_numbers:
             for digit in number:
-                if any(
-                    self.parsed[c].value in self.symbols
-                    for c in self.parsed.neighbours(digit.coordinate)
-                ):
+                if any(self.parsed[c].value in self.symbols for c in self.parsed.neighbours(digit.coordinate)):
                     output += int("".join(c.value for c in number))
                     break
         return output
