@@ -2,7 +2,7 @@ import abc
 import dataclasses
 import pathlib
 from functools import cached_property
-from typing import Callable, TypeVar, Generic
+from typing import Callable, Generic, TypeVar
 
 ParseResult = TypeVar("ParseResult")
 

@@ -11,4 +11,3 @@ src_paths = ["advent_of_code"]
 [tool.black]
 line-length = 120
 skip-string-normalization = true
-

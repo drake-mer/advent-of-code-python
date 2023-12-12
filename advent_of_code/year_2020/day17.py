@@ -1,5 +1,5 @@
 import dataclasses
-from typing import Generic, TypeAlias, Union, Self
+from typing import Generic, Self, TypeAlias, Union
 
 from advent_of_code.solution import Solution
 from advent_of_code.solution.datastructures.dimension3 import Coordinate as Coord3D

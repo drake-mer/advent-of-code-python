@@ -1,5 +1,5 @@
-from collections import deque
 import dataclasses
+from collections import deque
 
 from advent_of_code.solution import Solution
 from advent_of_code.utils import tokenize

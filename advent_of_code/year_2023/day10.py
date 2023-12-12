@@ -5,7 +5,7 @@ import itertools
 from functools import cached_property
 
 from advent_of_code.solution import Solution
-from advent_of_code.solution.datastructures.dimension2 import Coordinate, BaseMatrix
+from advent_of_code.solution.datastructures.dimension2 import BaseMatrix, Coordinate
 
 North = Coordinate(0, -1)
 South = Coordinate(0, 1)
