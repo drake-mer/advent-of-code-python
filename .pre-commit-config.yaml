@@ -12,6 +12,11 @@ repos:
     -   id: pretty-format-json
         args: [--autofix, --indent, "4"]
     -   id: check-toml
+-   repo: https://github.com/pycqa/isort
+    rev: 5.11.2
+    hooks:
+      - id: isort
+        name: isort (python)
 -   repo: https://github.com/psf/black
     rev: '23.3.0'
     hooks:
