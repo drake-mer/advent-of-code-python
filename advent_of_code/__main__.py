@@ -177,8 +177,7 @@ def prepare_puzzle_data_and_layout(year: int, day: int, refresh_input=False, new
     except ImportError:
         with open(year_path / DayModule(day), "w") as f:
             f.write(
-                f"""
-from advent_of_code.solution import Solution
+                f"""from advent_of_code.solution import Solution
 
 
 class {Day(day).title()}(Solution):
