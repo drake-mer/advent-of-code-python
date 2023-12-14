@@ -218,5 +218,5 @@ def run_solution(year: int, day: int, submit: Literal[0, 1, 2] = 0, test: bool =
         push(level=submit, solution=s2)
 
 
-prepare_puzzle_data_and_layout(args.year, args.day, args.download)
-run_solution(args.year, args.day, args.submit, args.test, args.new_tab)
+prepare_puzzle_data_and_layout(args.year, args.day, args.download, args.new_tab)
+run_solution(args.year, args.day, args.submit, args.test)
