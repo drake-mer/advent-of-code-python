@@ -130,7 +130,7 @@ def push_solution(year=None, day=None, level=None, solution=None):
     if not (solution and year and day and level):
         raise ValueError("you must specify valid input parameters")
     if not (token := get_token()):
-        raise ValueError("token is not set")
+        raise ValueError("token is not set for answer submission")
     request = urllib.request.Request(
         method="POST",
         headers={
@@ -153,12 +153,12 @@ def push_solution(year=None, day=None, level=None, solution=None):
         print(
             f"you seem to have given an incorrect answer to {level=}, {day=}, {year=}",
         )
-    elif "That's not the right answer; your answer is too high." in content_response:
-        print(f"your answer was {solution} and is too high according to the website")
-    elif "That's not the right answer; your answer is too low." in content_response:
-        print(f"your answer was {solution} and is too low according to the website")
-    elif "You don't seem to be solving the right level.  Did you already complete it?" in content_response:
-        print("you probably already answered that, don’t make unnecessary request to the server please")
+    elif (s := "That's not the right answer; your answer is too high.") in content_response:
+        print(f"Miss for {solution=}: \"{s}\"")
+    elif (s := "That's not the right answer; your answer is too low.") in content_response:
+        print(s)
+    elif (s := "You don't seem to be solving the right level.  Did you already complete it?") in content_response:
+        print(s)
     else:
         print("<================ Unhandled response ===============>")
         print(content_response)
