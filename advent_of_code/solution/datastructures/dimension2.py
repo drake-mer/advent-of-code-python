@@ -1,7 +1,7 @@
 import collections
 import dataclasses
 from functools import cached_property
-from typing import Callable, Generic, Iterable, NamedTuple, TypeVar, Self
+from typing import Callable, Generic, Iterable, NamedTuple, Self, TypeVar
 
 from .dimensionN import GenericMap
 
@@ -44,6 +44,11 @@ class BaseMatrix(Generic[T]):
             raise ValueError(f"Coordinate {c} seems out of bound for matrix")
         return self.content[c.y][c.x]
 
+    def __setitem__(self, c: Coordinate, item: T):
+        if not self.in_map(c):
+            raise ValueError(f"Coordinate {c} is out of bound for this matrix")
+        self.content[c.y][c.x] = item
+
     def pretty_print(self, translate_function: Callable[[T], str]) -> str:
         output = []
         for y, row in enumerate(self.rows):
@@ -56,12 +61,9 @@ class BaseMatrix(Generic[T]):
             for pixel in row:
                 yield pixel
 
-    def copy(self) -> Self:
-        return BaseMatrix(content=[row[:] for row in self.rows])
-
     @property
     def columns(self):
-        yield from zip(*self.rows)
+        return [list(c) for c in zip(*self.rows)]
 
     def find(self, value: T):
         for x in range(self.width):

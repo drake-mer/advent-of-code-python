@@ -6,7 +6,7 @@ from advent_of_code.solution.datastructures.dimension2 import BaseMatrix
 
 
 def to_int(row: list[bool]):
-    return sum(item * (2 ** pos) for pos, item in enumerate(row))
+    return sum(item * (2**pos) for pos, item in enumerate(row))
 
 
 def find_symmetry_axis(vector: list[int]) -> list[int]:
@@ -21,7 +21,6 @@ def find_symmetry_axis(vector: list[int]) -> list[int]:
 
 
 class Pattern(BaseMatrix[bool]):
-
     def flip(self, row: int, col: int):
         self.content[row][col] = not self.content[row][col]
 
@@ -45,7 +44,7 @@ class Pattern(BaseMatrix[bool]):
 
     @property
     def score(self):
-        score, = self.scores
+        (score,) = self.scores
         return score
 
     @property

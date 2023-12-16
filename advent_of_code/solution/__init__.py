@@ -44,6 +44,6 @@ class Solution(Generic[ParseResult]):
         raise NotImplementedError()
 
     @cached_property
-    def parsed(self) -> ParseResult:
+    def parsed(self):
         """It is not mandatory to implement this function, but it helps for standardization"""
         return self.parse()
