@@ -1,7 +1,7 @@
 import collections
 import dataclasses
 from functools import cached_property
-from typing import Callable, Generic, Iterable, NamedTuple, TypeVar
+from typing import Callable, Generic, Iterable, NamedTuple, TypeVar, Self
 
 from .dimensionN import GenericMap
 
@@ -55,6 +55,13 @@ class BaseMatrix(Generic[T]):
         for row in self.rows:
             for pixel in row:
                 yield pixel
+
+    def copy(self) -> Self:
+        return BaseMatrix(content=[row[:] for row in self.rows])
+
+    @property
+    def columns(self):
+        yield from zip(*self.rows)
 
     def find(self, value: T):
         for x in range(self.width):

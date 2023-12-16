@@ -1,91 +1,92 @@
 import dataclasses
-import math
-from functools import cached_property
+import itertools
 
 from advent_of_code.solution import Solution
+from advent_of_code.solution.datastructures.dimension2 import BaseMatrix
 
 
-def to_int(row: str):
-    return int(row.replace("#", "0").replace(".", "1"), 2)
+def to_int(row: list[bool]):
+    return sum(item * (2 ** pos) for pos, item in enumerate(row))
 
 
-def possible_rows(pattern: "Pattern"):
-    for pos, number in enumerate(pattern.rows):
-        nb_col = pattern.width
-        for k in range(0, nb_col):
-            rows = list(pattern.rows)
-            cols = list(pattern.columns)
-            rows[pos] ^= 2**k
-            cols[k] ^= 2**pos
-            yield Pattern(rows=rows, columns=cols)
-
-
-def find_symmetry_axis(row: list[int]):
-    for k in range(0, len(row)):
-        s1, s2 = row[:k], row[k:]
+def find_symmetry_axis(vector: list[int]) -> list[int]:
+    all_axis = []
+    for k in range(0, len(vector)):
+        s1, s2 = vector[:k], vector[k:]
         if len(s1) % 2 == 0 and s1 and s1[::-1] == s1:
-            return len(s1) // 2
+            all_axis.append(len(s1) // 2)
         if len(s2) % 2 == 0 and s2 and s2[::-1] == s2:
-            return k + len(s2) // 2
+            all_axis.append(k + len(s2) // 2)
+    return all_axis
 
 
-@dataclasses.dataclass
-class Pattern:
-    rows: list[int]
-    columns: list[int]
+class Pattern(BaseMatrix[bool]):
 
-    @cached_property
-    def width(self):
-        return len(self.columns)
+    def flip(self, row: int, col: int):
+        self.content[row][col] = not self.content[row][col]
 
-    @cached_property
-    def height(self):
-        return len(self.rows)
+    @property
+    def col_values(self):
+        for c in self.columns:
+            yield to_int(c)
 
-    @classmethod
-    def parse(cls, lines: list[str]):
-        return cls(rows=[to_int(line) for line in lines], columns=[to_int("".join(col)) for col in zip(*lines)])
+    @property
+    def row_values(self):
+        for r in self.rows:
+            yield to_int(r)
 
-    @cached_property
+    @property
     def x_axis(self):
-        return find_symmetry_axis(self.columns)
+        return find_symmetry_axis(list(self.col_values))
 
-    @cached_property
+    @property
     def y_axis(self):
-        return find_symmetry_axis(self.rows)
+        return find_symmetry_axis(list(self.row_values))
 
     @property
     def score(self):
-        if self.x_axis:
-            return self.x_axis
-        elif self.y_axis:
-            return 100 * self.y_axis
-        else:
-            return 0
+        score, = self.scores
+        return score
 
-    def expand(self):
-        yield from possible_rows(self)
+    @property
+    def scores(self):
+        for x_axis in self.x_axis:
+            yield x_axis
+        for y_axis in self.y_axis:
+            yield y_axis * 100
+
+    @property
+    def new_score(self):
+        initial_score = self.score
+        for row_number, col_number in itertools.product(range(self.height), range(self.width)):
+            self.flip(row_number, col_number)
+            for score in self.scores:
+                if score == initial_score:
+                    continue
+                return score
+            self.flip(row_number, col_number)
 
 
 class Day13(Solution):
     def parse(self):
         output: list[Pattern] = []
         current_matrix: list[str] = []
+        parsed = lambda: Pattern.parse_matrix(data=current_matrix, wrapper=lambda c, _: c == "#")
         for line in self.lines:
             if not line:
-                output.append(Pattern.parse(current_matrix))
+                output.append(parsed())
                 current_matrix = []
                 continue
             current_matrix.append(line)
         else:
-            output.append(Pattern.parse(current_matrix))
+            output.append(parsed())
         return output
 
     def solution1(self):
         return sum(pat.score for pat in self.parsed)
 
     def solution2(self):
-        return sum(pattern.score for pat in self.parsed for pattern in pat.expand())
+        return sum(pat.new_score for pat in self.parsed)
 
 
 class Day13Test(Day13):
