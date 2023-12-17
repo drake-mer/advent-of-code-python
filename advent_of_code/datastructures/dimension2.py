@@ -1,5 +1,5 @@
-import collections
 import dataclasses
+import enum
 from functools import cached_property
 from typing import Callable, Generic, Iterable, NamedTuple, Self, TypeVar
 
@@ -18,6 +18,9 @@ class Coordinate(NamedTuple):
 
     def __sub__(self, other):
         return Coordinate(self.x - other.x, self.y - other.y)
+
+    def __mul__(self, factor: int):
+        return Coordinate(self.x * factor, self.y * factor)
 
     def rotate_pi_over_2(self):
         return Coordinate(self.y, -self.x)
@@ -161,3 +164,18 @@ class BaseMatrix(Generic[T]):
 
 class Map2D(GenericMap[Coordinate, T]):
     pass
+
+
+class Direction(Coordinate, enum.Enum):
+    UP = (0, -1)
+    DOWN = (0, 1)
+    LEFT = (-1, 0)
+    RIGHT = (1, 0)
+
+
+def turn_left(direction: Direction):
+    return Coordinate(direction.y, -direction.x)
+
+
+def turn_right(direction: Direction):
+    return Coordinate(-direction.y, direction.x)
