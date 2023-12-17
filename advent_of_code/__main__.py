@@ -171,7 +171,7 @@ def prepare_puzzle_data_and_layout(year: int, day: int, refresh_input=False, new
 
     if not (year_path / "__init__.py").exists():
         with open(year_path / "__init__.py", "w") as f:
-            f.write(f'"""AOC year={year}"""')
+            f.write(f'"""AOC year={year}\n"""')
     try:
         importlib.import_module(f"advent_of_code.year_{year}.{Day(day)}")
     except ImportError:
@@ -181,11 +181,20 @@ def prepare_puzzle_data_and_layout(year: int, day: int, refresh_input=False, new
 
 
 class {Day(day).title()}(Solution):
+    def parse(self):
+        raise NotImplementedError()
+
     def solution1(self):
         return "not implemented"
 
     def solution2(self):
         return "not implemented"
+
+
+class {Day(day).title()}Test({Day(day).title()}):
+    @property
+    def data(self):
+        return \"\"\"\"\"\"
 """,
             )
 

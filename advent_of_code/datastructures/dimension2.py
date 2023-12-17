@@ -49,6 +49,9 @@ class BaseMatrix(Generic[T]):
             raise ValueError(f"Coordinate {c} is out of bound for this matrix")
         self.content[c.y][c.x] = item
 
+    def __contains__(self, item: Coordinate):
+        return self.in_map(item)
+
     def pretty_print(self, translate_function: Callable[[T], str]) -> str:
         output = []
         for y, row in enumerate(self.rows):

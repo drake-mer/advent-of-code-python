@@ -1,10 +1,10 @@
 import dataclasses
 from typing import Generic, Self, TypeAlias, Union
 
+from advent_of_code.datastructures import Coordinate as Coord3D
+from advent_of_code.datastructures import Coordinate as Coord4D
+from advent_of_code.datastructures.dimensionN import C, GenericMap, T
 from advent_of_code.solution import Solution
-from advent_of_code.solution.datastructures.dimension3 import Coordinate as Coord3D
-from advent_of_code.solution.datastructures.dimension4 import Coordinate as Coord4D
-from advent_of_code.solution.datastructures.dimensionN import C, GenericMap, T
 
 
 @dataclasses.dataclass(frozen=True)

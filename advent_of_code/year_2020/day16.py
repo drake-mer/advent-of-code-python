@@ -2,8 +2,8 @@ import dataclasses
 import functools
 from typing import Iterable, TypeAlias
 
+from advent_of_code.datastructures import Range
 from advent_of_code.solution import Solution
-from advent_of_code.solution.datastructures.dimension1 import Range
 
 
 class Ticket(list[int]):

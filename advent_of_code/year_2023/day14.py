@@ -1,11 +1,9 @@
-import dataclasses
-import functools
 import hashlib
-from collections import Counter, defaultdict
-from typing import Self, TypeAlias, Union
+from collections import defaultdict
+from typing import Self
 
+from advent_of_code.datastructures import BaseMatrix, Coordinate
 from advent_of_code.solution import Solution
-from advent_of_code.solution.datastructures.dimension2 import BaseMatrix, Coordinate
 
 
 class SquareContent:

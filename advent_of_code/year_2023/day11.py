@@ -2,8 +2,8 @@ import dataclasses
 import itertools
 from functools import cached_property
 
+from advent_of_code.datastructures import BaseMatrix, Coordinate
 from advent_of_code.solution import Solution
-from advent_of_code.solution.datastructures.dimension2 import BaseMatrix, Coordinate
 
 
 def counter():

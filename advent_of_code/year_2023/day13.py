@@ -1,8 +1,7 @@
-import dataclasses
 import itertools
 
+from advent_of_code.datastructures import BaseMatrix
 from advent_of_code.solution import Solution
-from advent_of_code.solution.datastructures.dimension2 import BaseMatrix
 
 
 def to_int(row: list[bool]):
