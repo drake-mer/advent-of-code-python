@@ -1,6 +1,7 @@
 import dataclasses
 from collections import defaultdict
 from queue import PriorityQueue
+from typing import Callable, Iterable
 
 from advent_of_code.datastructures.dimension2 import (
     BaseMatrix,
@@ -74,7 +75,7 @@ class City(BaseMatrix[int]):
             )
             return
 
-        if current.steps < 4:
+        elif current.steps < 4:
             new = MoveWay(current.position + current.direction, current.direction, steps=current.steps + 1)
             if new.position not in self:
                 return
@@ -93,7 +94,7 @@ class City(BaseMatrix[int]):
                     return
                 yield res
 
-    def path_lookup(self, step_function="steps"):
+    def path_lookup(self, step_function: Callable[[MoveWay], Iterable[MoveWay]] = None):
         target = Coordinate(self.width - 1, self.height - 1)
 
         def heuristic_function(move: MoveWay) -> int:
@@ -106,8 +107,6 @@ class City(BaseMatrix[int]):
                 total += self[node.position]
             return total - self[Coordinate(0, 0)]
 
-        # the two possible starting points (Coordinate(0, 0) has no cost so no need to start from it)
-        # should steps be 0 or 1 here?
         known_nodes_queue = PriorityQueue()
         known_nodes_queue.put(MovePriority(0, start := MoveWay(Coordinate(0, 0), Direction.RIGHT, 0)))
         known_nodes = {start}
@@ -122,7 +121,7 @@ class City(BaseMatrix[int]):
             if current_node.position == target:
                 return get_score(current_node)
             known_nodes.remove(current_node)
-            for step in getattr(self, step_function)(current_node):
+            for step in step_function(current_node):
                 cost = real_distance[current_node] + self[step.position]
                 if cost < real_distance[step]:
                     previous_node[step] = current_node
@@ -140,10 +139,10 @@ class Day17(Solution):
         return City(content=BaseMatrix.parse_matrix(data=self.lines, wrapper=lambda x, c: int(x)).content)
 
     def solution1(self):
-        return self.parsed.path_lookup()
+        return self.parsed.path_lookup(step_function=self.parsed.steps)
 
     def solution2(self):
-        return self.parsed.path_lookup(step_function="steps2")
+        return self.parsed.path_lookup(step_function=self.parsed.steps2)
 
 
 class Day17Test(Day17):
