@@ -10,8 +10,9 @@ import webbrowser
 from typing import Literal
 
 from .solution import Solution
+from .utils import get_env
 
-CURRENT_YEAR = datetime.datetime.now().year
+CURRENT_YEAR = int(year) if (year := get_env("AOC_YEAR")) else datetime.datetime.now().year
 CURRENT_DAY = datetime.datetime.now().day
 
 parser = argparse.ArgumentParser(
@@ -77,28 +78,8 @@ class DayModule(str):
         return str(Day(d) + ".py")
 
 
-def get_token():
-    env_file = pathlib.Path(os.getcwd()) / ".env"
-
-    if token := os.getenv("AOC_TOKEN"):
-        return token
-    if env_file.exists():
-        for line in open(env_file):
-            line = line.strip()
-            if not line:
-                return
-            try:
-                key, value = line.split("=")
-                key = key.strip()
-                value = value.strip()
-                if key == "AOC_TOKEN":
-                    return value
-            except ValueError:
-                return
-
-
 def download_input_data(year: int, day: int):
-    if not (session_token := get_token()):
+    if not (session_token := get_env()):
         print("WARNING: could not download puzzle data, token is missing.")
         print(
             "Try putting AOC_TOKEN (session cookie value) into your environment or a '.env' file",
@@ -129,7 +110,7 @@ def download_input_data(year: int, day: int):
 def push_solution(year=None, day=None, level=None, solution=None):
     if not (solution and year and day and level):
         raise ValueError("you must specify valid input parameters")
-    if not (token := get_token()):
+    if not (token := get_env()):
         raise ValueError("token is not set for answer submission")
     request = urllib.request.Request(
         method="POST",
