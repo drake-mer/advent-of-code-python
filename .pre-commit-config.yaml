@@ -22,4 +22,4 @@ repos:
     hooks:
       - id: black
         name: Check Python style and formatting
-        language_version: python3.11
+        language_version: python3.12
