@@ -1,5 +1,4 @@
 import dataclasses
-import enum
 
 from advent_of_code.datastructures.dimension2 import Coordinate, Direction, Map2D
 from advent_of_code.solution import Solution
@@ -46,7 +45,7 @@ class Day03(Solution):
         coordinate = Coordinate(0, 0)
         start = 0
         for vector in wire:
-            for k in range(vector.steps):
+            for _ in range(vector.steps):
                 start += 1
                 coordinate += vector.direction
                 if coordinate in new_map:
@@ -60,4 +59,6 @@ class Day03(Solution):
         wire_two = [Vector.from_string(vec) for vec in wire_two.split(",")]
         map_one = self.mark_map(wire_one)
         map_two = self.mark_map(wire_two)
+        print(f"len map 1, {len(map_one)}")
+        print(f"len map 2, {len(map_two)}")
         return map_one, map_two
