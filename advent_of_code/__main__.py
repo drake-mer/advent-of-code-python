@@ -153,9 +153,8 @@ def prepare_puzzle_data_and_layout(year: int, day: int, refresh_input=False, new
     if not (year_path / "__init__.py").exists():
         with open(year_path / "__init__.py", "w") as f:
             f.write(f'"""AOC year={year}\n"""')
-    try:
-        importlib.import_module(f"advent_of_code.year_{year}.{Day(day)}")
-    except ImportError:
+
+    if not (year_path / DayModule(day)).exists():
         with open(year_path / DayModule(day), "w") as f:
             f.write(
                 f"""from advent_of_code.solution import Solution

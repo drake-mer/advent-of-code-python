@@ -48,9 +48,11 @@ class ComputerMemory(list):
             val, *remaining = self.input_buffer
             self.input_buffer = remaining
         self[arg_1] = val
+        self.position += 2
 
     def output_value(self, value):
         self.output_buffer.append(value)
+        self.position += 2
 
     def run_program(self):
         element = self[self.position]
@@ -98,7 +100,6 @@ class ComputerMemory(list):
                     case OpCode.OUTPUT:
                         value = self.get_value(arg_1, mode=Mode(mode_c))
                         self.output_value(value)
-                self.position += 2
             case OpCode.JUMP_IF_TRUE | OpCode.JUMP_IF_FALSE:
                 arg_1, arg_2, *remains = remains
                 arg_1 = self.get_value(arg_1, mode=Mode(mode_c))
