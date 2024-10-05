@@ -188,7 +188,9 @@ class Workflow:
         instructions = line[line.find("{") :]
         instructions = instructions.strip("{}")
         instructions = instructions.split(",")
-        return cls(label, [CompOp.parse(w) for w in instructions[:-1]], instructions[-1])
+        return cls(
+            label, [CompOp.parse(w) for w in instructions[:-1]], instructions[-1]
+        )
 
 
 @dataclasses.dataclass
@@ -214,7 +216,9 @@ class Game:
             acc_parts += self.process_part(part)
         return acc_parts
 
-    def make_tree(self, label: Label = None, other: list[CompOp] = None, fallback: Label = None):
+    def make_tree(
+        self, label: Label = None, other: list[CompOp] = None, fallback: Label = None
+    ):
         if label == "A" or label == "R":
             return Action(label)
         if other is None and fallback is None:
@@ -226,7 +230,9 @@ class Game:
                 return Action(fallback)
             next_node = self.workflows[fallback]
             return self.make_tree(
-                label=Label(next_node.label), other=next_node.conditions, fallback=Label(next_node.fallback)
+                label=Label(next_node.label),
+                other=next_node.conditions,
+                fallback=Label(next_node.fallback),
             )
         else:
             cond, *other = other
@@ -244,7 +250,12 @@ def reduce_branch(branch):
         "s": Range(),
         "m": Range(),
     }
-    return result["a"].length * result["x"].length * result["s"].length * result["m"].length
+    return (
+        result["a"].length
+        * result["x"].length
+        * result["s"].length
+        * result["m"].length
+    )
 
 
 class Day19(Solution):
@@ -273,13 +284,17 @@ class Day19(Solution):
                 result.append((False, t.falsy))
                 yield result
             else:
-                yield from reduce_tree(t.falsy, list(current_chain) + [(False, t.falsy.condition)])
+                yield from reduce_tree(
+                    t.falsy, list(current_chain) + [(False, t.falsy.condition)]
+                )
             if isinstance(t.truthy, Action):
                 result = list(current_chain)
                 result.append((True, t.truthy))
                 yield result
             else:
-                yield from reduce_tree(t.truthy, list(current_chain) + [(True, t.truthy.condition)])
+                yield from reduce_tree(
+                    t.truthy, list(current_chain) + [(True, t.truthy.condition)]
+                )
 
         branches = [b for b in reduce_tree(all_ways) if b[-1][-1] == Action.ACCEPT]
         return sum(reduce_branch(branch) for branch in branches)

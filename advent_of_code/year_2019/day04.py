@@ -9,7 +9,9 @@ class Day04(Solution):
 
     @staticmethod
     def is_candidate(k: int) -> bool:
-        return sorted(str(k)) == list(str(k)) and any(len(list(v)) >= 2 for _, v in groupby(str(k)))
+        return sorted(str(k)) == list(str(k)) and any(
+            len(list(v)) >= 2 for _, v in groupby(str(k))
+        )
 
     @staticmethod
     def has_group_of_two(k: int):

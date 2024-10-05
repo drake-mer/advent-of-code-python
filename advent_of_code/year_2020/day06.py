@@ -24,7 +24,10 @@ class Day06(Solution):
         return Game(all_groups)
 
     def answer_generic(self, fun=None):
-        return sum(len(functools.reduce(fun, (set(person) for person in group))) for group in self.parsed.groups)
+        return sum(
+            len(functools.reduce(fun, (set(person) for person in group)))
+            for group in self.parsed.groups
+        )
 
     def solution1(self):
         return self.answer_generic(lambda p1, p2: p1 | p2)

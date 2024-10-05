@@ -23,15 +23,23 @@ class LinkedList(Generic[T, N]):
         if self.label == label:
             return LinkedList(value=value, label=label, next=self.next)
         if self.next is None:
-            return LinkedList(value=self.value, label=self.label, next=LinkedList(value=value, label=label))
-        return LinkedList(value=self.value, label=self.label, next=self.next.update(label, value))
+            return LinkedList(
+                value=self.value,
+                label=self.label,
+                next=LinkedList(value=value, label=label),
+            )
+        return LinkedList(
+            value=self.value, label=self.label, next=self.next.update(label, value)
+        )
 
     def remove(self, label: N):
         if self.label == label:
             return self.next
         if self.next is None:
             return self
-        return LinkedList(value=self.value, label=self.label, next=self.next.remove(label))
+        return LinkedList(
+            value=self.value, label=self.label, next=self.next.remove(label)
+        )
 
     def get(self, label: N):
         """Not mandatory for the exercise but let's have fun"""
@@ -57,14 +65,18 @@ class ToyHashMap(Generic[T, N]):
 
     def __setitem__(self, label: str, value: int):
         if self.content[(hash_val := hash_algo(label))]:
-            self.content[hash_val] = self.content[hash_val].update(label=label, value=value)
+            self.content[hash_val] = self.content[hash_val].update(
+                label=label, value=value
+            )
         else:
             self.content[hash_val] = LinkedList(label=label, value=value)
 
     @property
     def total_focal_power(self):
         return sum(
-            (k * sum((power * pos for pos, power in enumerate(self.content[k - 1], 1)))) if self.content[k - 1] else 0
+            (k * sum((power * pos for pos, power in enumerate(self.content[k - 1], 1))))
+            if self.content[k - 1]
+            else 0
             for k in range(1, len(self.content) + 1)
         )
 

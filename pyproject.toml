@@ -9,5 +9,5 @@ profile = "black"
 src_paths = ["advent_of_code"]
 
 [tool.black]
-line-length = 120
+line-length = 88
 skip-string-normalization = true

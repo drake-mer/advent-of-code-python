@@ -113,13 +113,18 @@ class HuntingGround(BaseMatrix[Pixel]):
         possible_starts = [
             self[c]
             for c in self.neighbours(starting_point.coordinate, diagonal=False)
-            if self[c].is_pipe and any([n == starting_point.coordinate for n in self[c].connecting])
+            if self[c].is_pipe
+            and any([n == starting_point.coordinate for n in self[c].connecting])
         ]
         visited_: dict[Pixel, int] = dict()
         visited_[starting_point.update_distance(0)] = distance
         to_visit: collections.deque[Pixel] = collections.deque()
         to_visit.extend(
-            [square.update_distance(distance + 1) for square in possible_starts if square not in visited_][:1]
+            [
+                square.update_distance(distance + 1)
+                for square in possible_starts
+                if square not in visited_
+            ][:1]
         )
         while to_visit:
             next_node = to_visit.popleft()
@@ -139,7 +144,9 @@ class HuntingGround(BaseMatrix[Pixel]):
 
 class Day10(Solution):
     def parse(self) -> HuntingGround:
-        game = HuntingGround.parse_matrix(data=self.lines, wrapper=lambda c, coord: Pixel(Tile(c), coord))
+        game = HuntingGround.parse_matrix(
+            data=self.lines, wrapper=lambda c, coord: Pixel(Tile(c), coord)
+        )
         return game
 
     def path(self):

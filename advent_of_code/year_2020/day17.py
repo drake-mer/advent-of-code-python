@@ -47,7 +47,9 @@ class Game(Generic[C, T]):
                     must_lit.append(pix_coordinate)
             else:
                 assert new_space[pix_coordinate] == Lit()
-                if len(list(Game(space=new_space).lit_neighbours(pix_coordinate))) not in (2, 3):
+                if len(
+                    list(Game(space=new_space).lit_neighbours(pix_coordinate))
+                ) not in (2, 3):
                     must_switch_off.append(pix_coordinate)
         for pixel_to_switch in must_lit:
             new_space[pixel_to_switch] = Lit()

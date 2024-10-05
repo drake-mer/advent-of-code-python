@@ -1,6 +1,7 @@
-from advent_of_code.solution import Solution
 import enum
 import itertools
+
+from advent_of_code.solution import Solution
 
 
 class OpCode(int, enum.Enum):
@@ -18,7 +19,9 @@ class ReturnCode(int, enum.Enum):
     STOP = False
 
 
-def apply(op: OpCode, arg1: Position, arg2: Position, arg3: Position, buffer: list[int]):
+def apply(
+    op: OpCode, arg1: Position, arg2: Position, arg3: Position, buffer: list[int]
+):
     match op:
         case OpCode.ADD:
             buffer[arg3] = buffer[arg2] + buffer[arg1]
@@ -45,8 +48,12 @@ class Day02(Solution):
         parsed[1] = init_1
         parsed[2] = init_2
         for k in range(len(parsed) // 4):
-            (op, arg1, arg2, arg3) = parsed[k*4:k*4+4]
-            match (res := apply(OpCode(op), Position(arg1), Position(arg2), Position(arg3), parsed)):
+            (op, arg1, arg2, arg3) = parsed[k * 4 : k * 4 + 4]
+            match (
+                res := apply(
+                    OpCode(op), Position(arg1), Position(arg2), Position(arg3), parsed
+                )
+            ):
                 case ReturnCode.OK:
                     continue
                 case ReturnCode.STOP:

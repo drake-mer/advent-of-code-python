@@ -56,7 +56,9 @@ class Pattern(BaseMatrix[bool]):
     @property
     def new_score(self):
         initial_score = self.score
-        for row_number, col_number in itertools.product(range(self.height), range(self.width)):
+        for row_number, col_number in itertools.product(
+            range(self.height), range(self.width)
+        ):
             self.flip(row_number, col_number)
             for score in self.scores:
                 if score == initial_score:
@@ -69,7 +71,9 @@ class Day13(Solution):
     def parse(self):
         output: list[Pattern] = []
         current_matrix: list[str] = []
-        parsed = lambda: Pattern.parse_matrix(data=current_matrix, wrapper=lambda c, _: c == "#")
+        parsed = lambda: Pattern.parse_matrix(
+            data=current_matrix, wrapper=lambda c, _: c == "#"
+        )
         for line in self.lines:
             if not line:
                 output.append(parsed())

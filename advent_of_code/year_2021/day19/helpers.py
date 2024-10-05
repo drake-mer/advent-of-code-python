@@ -16,6 +16,10 @@ def parse_data(data: str):
         if not scanner.strip():
             continue
         data.append(
-            [Vector(int(c) for c in line.strip().split(",")) for line in scanner.splitlines() if line],
+            [
+                Vector(int(c) for c in line.strip().split(","))
+                for line in scanner.splitlines()
+                if line
+            ],
         )
     return data

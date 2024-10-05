@@ -12,7 +12,9 @@ from typing import Literal
 from .solution import Solution
 from .utils import get_env
 
-CURRENT_YEAR = int(year) if (year := get_env("AOC_YEAR")) else datetime.datetime.now().year
+CURRENT_YEAR = (
+    int(year) if (year := get_env("AOC_YEAR")) else datetime.datetime.now().year
+)
 CURRENT_DAY = datetime.datetime.now().day
 
 parser = argparse.ArgumentParser(
@@ -54,7 +56,9 @@ parser.add_argument(
     help="Run the class DayXXTest solution1 and solution2 methods (useful for test examples)",
     action="store_true",
 )
-parser.add_argument("-n", "--new-tab", help="open a new browser page on the puzzle", action="store_true")
+parser.add_argument(
+    "-n", "--new-tab", help="open a new browser page on the puzzle", action="store_true"
+)
 args = parser.parse_args()
 
 
@@ -126,7 +130,10 @@ def push_solution(year=None, day=None, level=None, solution=None):
         f"solution for day {day=}, {year=} at {level=} submitted successfully with status HTTP {response.code=}",
     )
     content_response = response.read().decode()
-    if "you have to wait after submitting an answer before trying again" in content_response:
+    if (
+        "you have to wait after submitting an answer before trying again"
+        in content_response
+    ):
         print("please wait before resubmitting")
     elif "That's the right answer!" in content_response:
         print(f"You seem to have found the correct answer to {level=}, {day=}, {year=}")
@@ -134,18 +141,26 @@ def push_solution(year=None, day=None, level=None, solution=None):
         print(
             f"you seem to have given an incorrect answer to {level=}, {day=}, {year=}",
         )
-    elif (s := "That's not the right answer; your answer is too high.") in content_response:
+    elif (
+        s := "That's not the right answer; your answer is too high."
+    ) in content_response:
         print(f"Miss for {solution=}: \"{s}\"")
-    elif (s := "That's not the right answer; your answer is too low.") in content_response:
+    elif (
+        s := "That's not the right answer; your answer is too low."
+    ) in content_response:
         print(s)
-    elif (s := "You don't seem to be solving the right level.  Did you already complete it?") in content_response:
+    elif (
+        s := "You don't seem to be solving the right level.  Did you already complete it?"
+    ) in content_response:
         print(s)
     else:
         print("<================ Unhandled response ===============>")
         print(content_response)
 
 
-def prepare_puzzle_data_and_layout(year: int, day: int, refresh_input=False, new_tab=False):
+def prepare_puzzle_data_and_layout(
+    year: int, day: int, refresh_input=False, new_tab=False
+):
     if not (year_path := YearFolder(year)).exists():
         print("year folder does not exist, creating it")
         os.mkdir(year_path)

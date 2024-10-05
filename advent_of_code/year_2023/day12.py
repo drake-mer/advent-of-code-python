@@ -39,7 +39,9 @@ def recurse(remains: str, current_group: int = 0, groups: tuple[int, ...] = ()) 
 
     match c:
         case "?":
-            return recurse(["#", *remains], current_group, groups) + recurse([".", *remains], current_group, groups)
+            return recurse(["#", *remains], current_group, groups) + recurse(
+                [".", *remains], current_group, groups
+            )
         case _:
             return recurse(remains, current_group, groups)
 
@@ -57,7 +59,14 @@ class SpringRow:
 
     def inflate(self) -> "SpringRow":
         return SpringRow(
-            row="?".join([self.row] * 5), groups=[*self.groups, *self.groups, *self.groups, *self.groups, *self.groups]
+            row="?".join([self.row] * 5),
+            groups=[
+                *self.groups,
+                *self.groups,
+                *self.groups,
+                *self.groups,
+                *self.groups,
+            ],
         )
 
 

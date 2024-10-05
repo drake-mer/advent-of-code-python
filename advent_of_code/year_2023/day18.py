@@ -59,7 +59,10 @@ def generate_map(instructions: list[DiggerInstruction]):
     upper_left = Coordinate(x_min, y_min)
     new_map = {c - upper_left for c in new_map}
     return TrenchMap(
-        content=[["#" if Coordinate(x, y) in new_map else "." for x in range(width)] for y in range(height)],
+        content=[
+            ["#" if Coordinate(x, y) in new_map else "." for x in range(width)]
+            for y in range(height)
+        ],
         trench=new_map,
     )
 
@@ -72,7 +75,9 @@ class Day18(Solution):
         inner_coordinates = Coordinate(70, 50)  # YMMV
         trench_map = generate_map(self.parsed)
         print(trench_map.pretty_print(lambda c: c))
-        flooded = trench_map.flood_fill(inner_coordinates, is_boundary=lambda c: trench_map[c] == "#")
+        flooded = trench_map.flood_fill(
+            inner_coordinates, is_boundary=lambda c: trench_map[c] == "#"
+        )
         return len(trench_map.trench) + len(flooded)
 
     def solution2(self):

@@ -76,7 +76,11 @@ class City(BaseMatrix[int]):
             return
 
         elif current.steps < 4:
-            new = MoveWay(current.position + current.direction, current.direction, steps=current.steps + 1)
+            new = MoveWay(
+                current.position + current.direction,
+                current.direction,
+                steps=current.steps + 1,
+            )
             if new.position not in self:
                 return
             yield new
@@ -89,7 +93,11 @@ class City(BaseMatrix[int]):
                     continue
                 yield MoveWay(new_pos, new_direction, steps=new_steps)
             if current.steps < 10:
-                res = MoveWay(current.position + current.direction, current.direction, steps=current.steps + 1)
+                res = MoveWay(
+                    current.position + current.direction,
+                    current.direction,
+                    steps=current.steps + 1,
+                )
                 if res.position not in self:
                     return
                 yield res
@@ -108,7 +116,9 @@ class City(BaseMatrix[int]):
             return total - self[Coordinate(0, 0)]
 
         known_nodes_queue = PriorityQueue()
-        known_nodes_queue.put(MovePriority(0, start := MoveWay(Coordinate(0, 0), Direction.RIGHT, 0)))
+        known_nodes_queue.put(
+            MovePriority(0, start := MoveWay(Coordinate(0, 0), Direction.RIGHT, 0))
+        )
         known_nodes = {start}
         # the preceding node for each one of the visited node
         previous_node: dict[MoveWay, MoveWay] = dict()
@@ -128,7 +138,9 @@ class City(BaseMatrix[int]):
                     real_distance[step] = cost
                     heuristic_guess[step] = cost + heuristic_function(step)
                     if step not in known_nodes:
-                        known_nodes_queue.put(MovePriority(priority=heuristic_guess[step], move=step))
+                        known_nodes_queue.put(
+                            MovePriority(priority=heuristic_guess[step], move=step)
+                        )
                         known_nodes.add(step)
 
         raise ValueError()
@@ -136,7 +148,11 @@ class City(BaseMatrix[int]):
 
 class Day17(Solution):
     def parse(self):
-        return City(content=BaseMatrix.parse_matrix(data=self.lines, wrapper=lambda x, c: int(x)).content)
+        return City(
+            content=BaseMatrix.parse_matrix(
+                data=self.lines, wrapper=lambda x, c: int(x)
+            ).content
+        )
 
     def solution1(self):
         return self.parsed.path_lookup(step_function=self.parsed.steps)

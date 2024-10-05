@@ -62,10 +62,16 @@ class Day06(Solution):
 
     def solution1(self):
         all_winning_per_race = [
-            tuple(push_time for push_time in range(0, race.time + 1) if race.push(push_time) > race.distance)
+            tuple(
+                push_time
+                for push_time in range(0, race.time + 1)
+                if race.push(push_time) > race.distance
+            )
             for race in self.parsed
         ]
-        return functools.reduce(lambda x, y: x * y, [len(w) for w in all_winning_per_race], 1)
+        return functools.reduce(
+            lambda x, y: x * y, [len(w) for w in all_winning_per_race], 1
+        )
 
     def solution2(self):
         race = self.parse2()

@@ -123,7 +123,9 @@ class Hand:
     def mutations(self):
         possible_values = [c for c in self.cards if c.figure != "J"]
         change_positions = [pos for pos, c in enumerate(self.cards) if c.figure == "J"]
-        for mutated_set in itertools.product(*itertools.repeat(possible_values, len(change_positions))):
+        for mutated_set in itertools.product(
+            *itertools.repeat(possible_values, len(change_positions))
+        ):
             new_cards = list(self.cards)
             for pos, val in zip(change_positions, mutated_set):
                 new_cards[pos] = val
@@ -142,7 +144,12 @@ class Day07(Solution):
         return all_hands
 
     def solution1(self):
-        return sum([position * hand.bet for position, hand in enumerate(sorted(self.parsed), 1)])
+        return sum(
+            [
+                position * hand.bet
+                for position, hand in enumerate(sorted(self.parsed), 1)
+            ]
+        )
 
     def solution2(self):
         return sum(

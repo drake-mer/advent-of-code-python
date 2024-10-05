@@ -22,7 +22,9 @@ class Coordinate(NamedTuple):
         )
 
     def neighbours(self) -> Iterable["Coordinate"]:
-        for delta_c in itertools.product((-1, 0, 1), (-1, 0, 1), (-1, 0, 1), (-1, 0, 1)):
+        for delta_c in itertools.product(
+            (-1, 0, 1), (-1, 0, 1), (-1, 0, 1), (-1, 0, 1)
+        ):
             if delta_c == (0, 0, 0, 0):
                 continue
             yield self + Coordinate(*delta_c)

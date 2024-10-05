@@ -21,7 +21,9 @@ print("Number of possible pairs", len(sequence))
 print(polymer)
 
 
-pair_mapping = {pair: (pair[0] + elem, elem + pair[1]) for pair, elem in sequence.items()}
+pair_mapping = {
+    pair: (pair[0] + elem, elem + pair[1]) for pair, elem in sequence.items()
+}
 
 
 def make_pairs(sequence: str):

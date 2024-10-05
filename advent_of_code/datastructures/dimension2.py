@@ -93,7 +93,10 @@ class BaseMatrix(Generic[T]):
         return 0 <= c.x < self.width and 0 <= c.y < self.height
 
     def neighbours(self, c: Coordinate, diagonal=True) -> Iterable[Coordinate]:
-        return [neighbour_coordinate for neighbour_coordinate in self.neighbour_coordinates(c, diagonal=diagonal)]
+        return [
+            neighbour_coordinate
+            for neighbour_coordinate in self.neighbour_coordinates(c, diagonal=diagonal)
+        ]
 
     def neighbour_coordinates(self, c: Coordinate, diagonal=True) -> list[Coordinate]:
         """Assumption is that the matrix is of rectangular shape"""
@@ -138,13 +141,17 @@ class BaseMatrix(Generic[T]):
 
         accumulator.add(coordinate)
         pixels_to_check = set(
-            c for c in self.neighbours(coordinate, diagonal=diagonal) if not is_boundary(c) and c not in accumulator
+            c
+            for c in self.neighbours(coordinate, diagonal=diagonal)
+            if not is_boundary(c) and c not in accumulator
         )
         while pixels_to_check:
             next_pixel = pixels_to_check.pop()
             accumulator.add(next_pixel)
             pixels_to_check.update(
-                c for c in self.neighbours(next_pixel, diagonal=diagonal) if not is_boundary(c) and c not in accumulator
+                c
+                for c in self.neighbours(next_pixel, diagonal=diagonal)
+                if not is_boundary(c) and c not in accumulator
             )
         return accumulator
 
@@ -158,7 +165,10 @@ class BaseMatrix(Generic[T]):
         wrapper: Callable[[str, Coordinate], T] = default_wrapper,
     ) -> "BaseMatrix":
         slice_ = data[start:end]
-        output = [[wrapper(char, Coordinate(x=x, y=y)) for x, char in enumerate(row)] for y, row in enumerate(slice_)]
+        output = [
+            [wrapper(char, Coordinate(x=x, y=y)) for x, char in enumerate(row)]
+            for y, row in enumerate(slice_)
+        ]
         return cls(content=output)
 
 

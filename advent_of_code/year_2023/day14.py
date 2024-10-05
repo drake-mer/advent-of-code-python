@@ -40,7 +40,9 @@ class Dish(BaseMatrix[SquareContent]):
                 if not isinstance(c, RoundedRock):
                     continue
                 current_y = y
-                while (next_y := current_y - 1) >= 0 and isinstance(dish[Coordinate(x, next_y)], EmptySpace):
+                while (next_y := current_y - 1) >= 0 and isinstance(
+                    dish[Coordinate(x, next_y)], EmptySpace
+                ):
                     dish[Coordinate(x, next_y)] = c
                     dish[Coordinate(x, current_y)] = EmptySpace()
                     current_y = next_y
@@ -55,7 +57,9 @@ class Dish(BaseMatrix[SquareContent]):
                 if not isinstance(c, RoundedRock):
                     continue
                 current_y = y
-                while (next_y := current_y + 1) < dish.height and isinstance(dish[Coordinate(x, next_y)], EmptySpace):
+                while (next_y := current_y + 1) < dish.height and isinstance(
+                    dish[Coordinate(x, next_y)], EmptySpace
+                ):
                     dish[Coordinate(x, next_y)] = c
                     dish[Coordinate(x, current_y)] = EmptySpace()
                     current_y = next_y
@@ -71,7 +75,9 @@ class Dish(BaseMatrix[SquareContent]):
                 if not isinstance(c, RoundedRock):
                     continue
                 current_x = x
-                while (next_x := current_x + 1) < dish.width and isinstance(dish[Coordinate(next_x, y)], EmptySpace):
+                while (next_x := current_x + 1) < dish.width and isinstance(
+                    dish[Coordinate(next_x, y)], EmptySpace
+                ):
                     dish[Coordinate(next_x, y)] = c
                     dish[Coordinate(current_x, y)] = EmptySpace()
                     current_x = next_x
@@ -85,7 +91,9 @@ class Dish(BaseMatrix[SquareContent]):
                 if not isinstance(c, RoundedRock):
                     continue
                 current_x = x
-                while (next_x := current_x - 1) >= 0 and isinstance(dish[Coordinate(next_x, y)], EmptySpace):
+                while (next_x := current_x - 1) >= 0 and isinstance(
+                    dish[Coordinate(next_x, y)], EmptySpace
+                ):
                     dish[Coordinate(next_x, y)] = c
                     dish[Coordinate(current_x, y)] = EmptySpace()
                     current_x = next_x
@@ -168,7 +176,10 @@ class Day14(Solution[Dish]):
         assert (
             len(
                 cycle_len := set(
-                    (k_second - k_first) for (k_first, k_second) in filter(lambda u: len(u) == 2, cycle_map.values())
+                    (k_second - k_first)
+                    for (k_first, k_second) in filter(
+                        lambda u: len(u) == 2, cycle_map.values()
+                    )
                 )
             )
             == 1

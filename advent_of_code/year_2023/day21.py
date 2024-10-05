@@ -15,7 +15,13 @@ def wrapper(c: str, coord: Coordinate):
     return MapElement(c), coord
 
 
-def bfs(map_: BaseMatrix, start: Coordinate = None, starting_points=None, depth=0, max_depth=64):
+def bfs(
+    map_: BaseMatrix,
+    start: Coordinate = None,
+    starting_points=None,
+    depth=0,
+    max_depth=64,
+):
     """
     c: starting point
     depth: number of iterations

@@ -117,7 +117,9 @@ class OpticalBench(BaseMatrix):
     @classmethod
     def parse(cls, data):
         return OpticalBench(
-            content=BaseMatrix.parse_matrix(data=data, wrapper=lambda p, coord: square_factory(p, coord)).content
+            content=BaseMatrix.parse_matrix(
+                data=data, wrapper=lambda p, coord: square_factory(p, coord)
+            ).content
         )
 
     def total_energy(self, start_beam=None) -> int:
@@ -144,11 +146,22 @@ class Day16(Solution):
         return self.parsed.total_energy()
 
     def solution2(self):
-        left = [Beam(Coordinate(0, y), Direction.RIGHT) for y in range(self.parsed.height)]
-        right = [Beam(Coordinate(self.parsed.width - 1, y), Direction.LEFT) for y in range(self.parsed.height)]
+        left = [
+            Beam(Coordinate(0, y), Direction.RIGHT) for y in range(self.parsed.height)
+        ]
+        right = [
+            Beam(Coordinate(self.parsed.width - 1, y), Direction.LEFT)
+            for y in range(self.parsed.height)
+        ]
         up = [Beam(Coordinate(x, 0), Direction.DOWN) for x in range(self.parsed.width)]
-        down = [Beam(Coordinate(x, self.parsed.height - 1), Direction.UP) for x in range(self.parsed.width)]
-        return max(self.parsed.total_energy(start_beam=beam) for beam in (*left, *right, *up, *down))
+        down = [
+            Beam(Coordinate(x, self.parsed.height - 1), Direction.UP)
+            for x in range(self.parsed.width)
+        ]
+        return max(
+            self.parsed.total_energy(start_beam=beam)
+            for beam in (*left, *right, *up, *down)
+        )
 
 
 class Day16Test(Day16):

@@ -77,10 +77,17 @@ class BaseMatrix(Generic[T]):
         return list(self.content)
 
     def in_map(self, c: Coordinate):
-        return 0 <= c.x < self.x_width and 0 <= c.y < self.y_width and 0 <= c.z < self.height
+        return (
+            0 <= c.x < self.x_width
+            and 0 <= c.y < self.y_width
+            and 0 <= c.z < self.height
+        )
 
     def neighbours(self, c: Coordinate, diagonal: bool = True) -> Iterable[Coordinate]:
-        return [self[neighbour_coordinate] for neighbour_coordinate in self.neighbour_coordinates(c, diagonal=diagonal)]
+        return [
+            self[neighbour_coordinate]
+            for neighbour_coordinate in self.neighbour_coordinates(c, diagonal=diagonal)
+        ]
 
     def neighbour_coordinates(self, c: Coordinate, diagonal=True) -> list[Coordinate]:
         """Assumption is that the matrix is of rectangular shape"""
@@ -125,13 +132,17 @@ class BaseMatrix(Generic[T]):
 
         accumulator.add(coordinate)
         pixels_to_check = set(
-            c for c in self.neighbours(coordinate, diagonal=diagonal) if not is_boundary(c) and c not in accumulator
+            c
+            for c in self.neighbours(coordinate, diagonal=diagonal)
+            if not is_boundary(c) and c not in accumulator
         )
         while pixels_to_check:
             next_pixel = pixels_to_check.pop()
             accumulator.add(next_pixel)
             pixels_to_check.update(
-                c for c in self.neighbours(next_pixel, diagonal=diagonal) if not is_boundary(c) and c not in accumulator
+                c
+                for c in self.neighbours(next_pixel, diagonal=diagonal)
+                if not is_boundary(c) and c not in accumulator
             )
         return accumulator
 
@@ -146,7 +157,10 @@ class BaseMatrix(Generic[T]):
     ) -> "BaseMatrix":
         slice_ = data[start:end]
         output = [
-            [[wrapper(char, Coordinate(x=x, y=y, z=z)) for x, char in enumerate(row)] for y, row in enumerate(plane)]
+            [
+                [wrapper(char, Coordinate(x=x, y=y, z=z)) for x, char in enumerate(row)]
+                for y, row in enumerate(plane)
+            ]
             for z, plane in enumerate(slice_)
         ]
         return cls(content=output)

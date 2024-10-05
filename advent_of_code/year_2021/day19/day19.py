@@ -22,7 +22,8 @@ def matcher(
     for transformation in all_cubic_group_transformations:
         result = defaultdict(lambda: [])
         test_list: list[(Vector, Vector)] = [
-            (beacon, transformation.apply(beacon)) for beacon in unknown_scanner_beacon_list
+            (beacon, transformation.apply(beacon))
+            for beacon in unknown_scanner_beacon_list
         ]
         for ref_point in beacon_reference_list:
             for original_coordinates, transformed_coordinates in test_list:
@@ -69,7 +70,9 @@ def full_beacon_list(data_):
                 all_pos[indexp] = tr
         assert index not in studied
         studied[index] = source
-        non_reached = [(k, v) for (k, v) in non_reached if k not in set(l for (l, w) in to_study)]
+        non_reached = [
+            (k, v) for (k, v) in non_reached if k not in set(l for (l, w) in to_study)
+        ]
 
     all_beacons = set()
     assert len(studied) + len(to_study) == len(all_data)
