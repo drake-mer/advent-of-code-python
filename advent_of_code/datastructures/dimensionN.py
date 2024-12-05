@@ -1,5 +1,5 @@
 import dataclasses
-from typing import Any, Generic, Sized, TypeAlias, TypeVar
+from typing import Any, Generic, Iterable, Sized, TypeAlias, TypeVar
 
 C: TypeAlias = TypeVar("C")
 T: TypeAlias = TypeVar("T")
@@ -31,3 +31,6 @@ class GenericMap(Generic[C, T], Sized):
 
     def values(self):
         yield from self.content.values()
+
+    def items(self) -> Iterable[tuple[C, T]]:
+        yield from self.content.items()

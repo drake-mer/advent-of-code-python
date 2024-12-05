@@ -38,6 +38,24 @@ def default_wrapper(*, value: str, _: Coordinate):
     return value
 
 
+def discrete_orientations(diagonal=False):
+    for c in [Coordinate(0, 1), Coordinate(1, 0), Coordinate(0, -1), Coordinate(-1, 0)]:
+        yield c
+    if diagonal:
+        for c in [
+            Coordinate(-1, -1),
+            Coordinate(-1, 1),
+            Coordinate(1, 1),
+            Coordinate(1, -1),
+        ]:
+            yield c
+
+
+def adjacent_coordinates(c: Coordinate, diagonal=False) -> Iterable[Coordinate]:
+    for direction in discrete_orientations(diagonal=diagonal):
+        yield c + direction
+
+
 @dataclasses.dataclass
 class BaseMatrix(Generic[T]):
     content: list[list[T]]
