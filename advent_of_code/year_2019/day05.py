@@ -51,10 +51,14 @@ class ComputerMemory(list):
                 return int(self[int(arg) + self.relative_base])
         raise ValueError("incorrect state in the calling function")
 
+    @staticmethod
+    def get_input(self):
+        return int(input("please enter a number"))
+
     def store_input(self, arg_1: str | int = None):
         arg_1 = int(arg_1, 10) if isinstance(arg_1, str) else arg_1
         if not self.input_buffer:
-            val = int(input("please enter a number"))
+            val = self.get_input()
         else:
             val, *remaining = self.input_buffer
             self.input_buffer = remaining

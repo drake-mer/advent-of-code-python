@@ -2,7 +2,7 @@ import dataclasses
 import itertools
 import math
 from collections import defaultdict
-from typing import Counter, NamedTuple
+from typing import NamedTuple
 
 from advent_of_code.datastructures.dimension3 import Coordinate
 from advent_of_code.solution import Solution

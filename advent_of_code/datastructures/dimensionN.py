@@ -28,3 +28,6 @@ class GenericMap(Generic[C, T], Sized):
 
     def __contains__(self, item):
         return self.content.__contains__(item)
+
+    def values(self):
+        yield from self.content.values()
