@@ -1,7 +1,7 @@
 import dataclasses
 import enum
 from functools import cached_property
-from typing import Callable, Generic, Iterable, NamedTuple, Self, TypeVar
+from typing import Callable, Generic, Iterable, NamedTuple, TypeVar
 
 from .dimensionN import GenericMap
 
